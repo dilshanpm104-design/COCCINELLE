@@ -2,11 +2,48 @@
   "store": {
     "name": "Coccinelle Supermarket",
     "address": "The Commons, Mirdif, Dubai",
-    "whatsapp": "",
+    "whatsapp": "971585060627",
     "hours": "",
     "deliveryNote": ""
   },
   "dealOfTheDay": null,
-  "offers": [],
+  "offers": [
+    {
+      "name": "Strawberry — USA",
+      "price": 19.5,
+      "unit": "per pack",
+      "note": "Fresh USA strawberries. Poster price: AED 19.50."
+    },
+    {
+      "name": "Red Grapes — Egypt",
+      "price": 8.75,
+      "unit": "per pack",
+      "note": "Egyptian red grapes. Poster price: AED 8.75."
+    },
+    {
+      "name": "White Grapes",
+      "price": 9.45,
+      "unit": "per pack",
+      "note": "White grapes. Poster price: AED 9.45."
+    },
+    {
+      "name": "Pomegranate Arils — India",
+      "price": 5,
+      "unit": "per pack",
+      "note": "Price range AED 5–7 per pack. Please confirm the exact price with the store before ordering."
+    },
+    {
+      "name": "Sweet Corn — Farmila",
+      "price": 6.99,
+      "unit": "250 g pack",
+      "note": "Ready-to-eat sweet corn. Poster price: AED 6.99."
+    },
+    {
+      "name": "Tender Coconut — Vietnam",
+      "price": 8.99,
+      "unit": "each",
+      "note": "Fresh young coconut from Vietnam. Poster price: AED 8.99."
+    }
+  ],
   "newArrivals": []
 }
