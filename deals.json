@@ -1,19 +1,12 @@
-
 {
   "store": {
     "name": "Coccinelle Supermarket",
     "address": "The Commons, Mirdif, Dubai",
     "whatsapp": "",
-    "hours": "Please update store hours",
-    "deliveryNote": "Please confirm delivery availability"
+    "hours": "",
+    "deliveryNote": ""
   },
-  "dealOfTheDay": {
-    "name": "Today's Special Offer",
-    "price": 10,
-    "normalPrice": 15,
-    "unit": "each",
-    "note": "Please update with your actual offer"
-  },
+  "dealOfTheDay": null,
   "offers": [],
   "newArrivals": []
 }
