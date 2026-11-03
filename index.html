@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Coccinelle Supermarket Mirdif: Deals and Offers</title>
+<meta name="description" content="Today's deals, offers and new arrivals at Coccinelle Supermarket, The Commons, Mirdif. Order on WhatsApp.">
+<style>
+:root{--red:#c8101e;--ink:#1b1b1b;--tag:#ffd60a;--leaf:#1e7a3c;--bg:#f2f4f3;--card:#fff;--muted:#5d6461}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:var(--red);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px}
+header h1{margin:0;font-size:1.15rem;font-weight:800}
+button{font:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+#lang{background:#fff;color:var(--red);border:0;border-radius:999px;padding:6px 14px;font-weight:700}
+#sample{background:var(--tag);padding:8px 16px;font-weight:700;text-align:center}
+main{max-width:960px;margin:0 auto;padding:16px}
+h2.sec{margin:28px 0 12px;font-size:1.3rem}
+.muted{color:var(--muted);margin:6px 0}
+.deal{background:var(--card);border-radius:14px;overflow:hidden;border:3px solid var(--ink)}
+.pic{aspect-ratio:4/3;background:#dfe5e2;display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:800;color:#9aa5a0;overflow:hidden}
+.pic img{width:100%;height:100%;object-fit:cover;display:block}
+.body{padding:14px 16px 16px}
+.deal h2{margin:0 0 8px;font-size:1.7rem;line-height:1.15}
+.deal .tag strong{font-size:2.4rem}
+.deal .pic{aspect-ratio:16/10}
+.tag{display:inline-flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;background:var(--tag);border-bottom:4px solid var(--red);padding:6px 12px;border-radius:6px}
+.tag strong{font-size:1.4rem;color:var(--red);font-weight:800}
+.tag span{font-weight:700}
+.tag s{color:var(--muted)}
+.tag em{font-style:normal;background:var(--red);color:#fff;border-radius:4px;padding:0 6px;font-size:.85rem;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
+.card{background:var(--card);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.card h3{margin:0 0 6px;font-size:1rem;line-height:1.25}
+.card .body{display:flex;flex-direction:column;gap:6px;flex:1}
+.card .tag{padding:3px 8px}
+.card .tag strong{font-size:1.1rem}
+.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:10px}
+.btn{border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:8px;padding:8px 12px;font-weight:700}
+.btn.go{background:var(--leaf);border-color:var(--leaf);color:#fff}
+footer{max-width:960px;margin:24px auto 0;padding:16px;font-size:.9rem;color:var(--muted)}
+footer a{color:var(--ink)}
+dialog{border:0;border-radius:14px;padding:0;width:min(440px,94vw)}
+dialog::backdrop{background:rgba(0,0,0,.55)}
+dialog form{padding:18px;display:flex;flex-direction:column;gap:10px}
+dialog h2{margin:0;font-size:1.2rem}
+dialog label{display:flex;flex-direction:column;gap:3px;font-weight:600}
+dialog input[type=text],dialog input[type=tel]{font:inherit;padding:9px;border:1px solid #9aa5a0;border-radius:8px}
+fieldset{border:0;padding:0;margin:0;display:flex;gap:16px}
+fieldset label{flex-direction:row;align-items:center;gap:6px}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+</style>
+</head>
+<body>
+<div id="sample" hidden>Sample data. Replace deals.json before publishing.</div>
+<header><h1 id="brand"></h1><button id="lang" type="button">العربية</button></header>
+<main id="main"><p class="muted" id="status">Loading deals…</p></main>
+<footer id="foot"></footer>
+
+<dialog id="dlg">
+<form id="f">
+<h2 id="dt"></h2>
+<p class="muted" id="di"></p>
+<fieldset>
+<label><input type="radio" name="mode" value="Delivery" checked><span id="l-del"></span></label>
+<label><input type="radio" name="mode" value="Pickup"><span id="l-pick"></span></label>
+</fieldset>
+<label><span id="l-n"></span><input type="text" id="n" autocomplete="name"></label>
+<label><span id="l-p"></span><input type="tel" id="p" inputmode="tel" autocomplete="tel"></label>
+<label id="locw"><span id="l-loc"></span><input type="text" id="loc"></label>
+<label><span id="l-q"></span><input type="text" id="q" value="1"></label>
+<label><span id="l-nt"></span><input type="text" id="nt"></label>
+<div class="row"><button type="button" class="btn" id="cancel"></button><button type="submit" class="btn go" id="send"></button></div>
+</form>
+</dialog>
+
+<script>
+const T={
+en:{deal:'Deal of the Day',offers:'Offers',arrivals:'New arrivals',order:'Order on WhatsApp',share:'Share',del:'Delivery',pick:'Pickup from store',n:'Your name',p:'WhatsApp number (optional)',loc:'Building, villa or area',q:'Quantity',nt:'Note (optional)',send:'Open WhatsApp',cancel:'Cancel',until:'Valid until',ended:'This deal has ended. Ask us for today’s deal.',loading:'Loading deals…',fail:'Could not load deals.json. Open this page through GitHub Pages or a web server.',hours:'Open',off:'off',setnum:'Store WhatsApp number is not set yet. Edit deals.json.',tit:'Order'},
+ar:{deal:'عرض اليوم',offers:'العروض',arrivals:'وصل حديثاً',order:'اطلب عبر واتساب',share:'مشاركة',del:'توصيل',pick:'استلام من المتجر',n:'الاسم',p:'رقم واتساب (اختياري)',loc:'المبنى أو الفيلا أو المنطقة',q:'الكمية',nt:'ملاحظة (اختياري)',send:'فتح واتساب',cancel:'إلغاء',until:'ساري حتى',ended:'انتهى هذا العرض. اسألونا عن عرض اليوم.',loading:'جارٍ تحميل العروض…',fail:'تعذر تحميل deals.json. افتح الصفحة عبر GitHub Pages أو خادم ويب.',hours:'ساعات العمل',off:'خصم',setnum:'لم يتم تحديد رقم واتساب المتجر بعد. عدّل ملف deals.json.',tit:'الطلب'}
+};
+let lang='en',D=null,cur=null;
+const $=s=>document.querySelector(s);
+const t=k=>T[lang][k]||k;
+function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
+const nm=i=>lang==='ar'&&i.name_ar?i.name_ar:i.name;
+const num=()=>String(D.store.whatsapp||'').replace(/\D/g,'');
+const money=v=>'AED '+Number(v).toFixed(2);
+
+function tagEl(i){
+  const g=el('div','tag');
+  g.append(el('strong',null,money(i.price)));
+  if(i.unit)g.append(el('span',null,'/ '+i.unit));
+  if(Number(i.normalPrice)>Number(i.price)){
+    g.append(el('s',null,money(i.normalPrice)));
+    g.append(el('em',null,Math.round((1-i.price/i.normalPrice)*100)+'% '+t('off')));
+  }
+  return g;
+}
+
+function card(i,big){
+  const c=el('article',big?'deal':'card');
+  const box=el('div','pic');
+  const letter=(nm(i)||'?').charAt(0);
+  if(i.image){
+    const im=new Image();im.alt=nm(i);im.loading='lazy';
+    im.onerror=()=>{im.remove();box.textContent=letter};
+    im.src=i.image;box.append(im);
+  }else box.textContent=letter;
+  c.append(box);
+  const b=el('div','body');
+  b.append(el(big?'h2':'h3',null,nm(i)));
+  b.append(tagEl(i));
+  const note=lang==='ar'&&i.note_ar?i.note_ar:i.note;
+  if(note)b.append(el('p','muted',note));
+  if(i.validUntil){
+    const over=new Date(i.validUntil+'T23:59:59')<new Date();
+    b.append(el('p','muted',over?t('ended'):t('until')+' '+i.validUntil));
+  }
+  const a=el('div','acts');
+  const ob=el('button','btn go',t('order'));ob.type='button';ob.onclick=()=>openOrder(i);a.append(ob);
+  if(big){const sb=el('button','btn',t('share'));sb.type='button';sb.onclick=()=>share(i);a.append(sb)}
+  b.append(a);c.append(b);return c;
+}
+
+function render(){
+  const m=$('#main');m.replaceChildren();
+  if(D.dealOfTheDay){m.append(el('h2','sec',t('deal')));m.append(card(D.dealOfTheDay,true))}
+  [['offers','offers'],['newArrivals','arrivals']].forEach(([k,lab])=>{
+    const L=D[k]||[];if(!L.length)return;
+    m.append(el('h2','sec',t(lab)));
+    const g=el('div','grid');L.forEach(i=>g.append(card(i,false)));m.append(g);
+  });
+  const f=$('#foot');f.replaceChildren();
+  const s=D.store;
+  f.append(el('p',null,s.name+' | '+s.address));
+  if(s.hours)f.append(el('p',null,t('hours')+': '+s.hours));
+  if(s.deliveryNote)f.append(el('p',null,s.deliveryNote));
+  const links=el('p');
+  [['Instagram',s.instagram],['Facebook',s.facebook],['Website',s.website]].forEach(([n,u])=>{
+    if(!u)return;const a=el('a',null,n);a.href=u;a.rel='noopener';a.target='_blank';links.append(a,' ');
+  });
+  f.append(links);
+  if(s.disclaimer)f.append(el('p',null,s.disclaimer));
+  if(s.advertiserPermit)f.append(el('p',null,'Advertiser Permit: '+s.advertiserPermit));
+}
+
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  $('#lang').textContent=lang==='ar'?'English':'العربية';
+  $('#brand').textContent=D?D.store.name:'';
+  $('#sample').hidden=!(D&&D.sample===true);
+  [['l-del','del'],['l-pick','pick'],['l-n','n'],['l-p','p'],['l-loc','loc'],['l-q','q'],['l-nt','nt'],['send','send'],['cancel','cancel']].forEach(([id,k])=>{$('#'+id).textContent=t(k)});
+  $('#dt').textContent=t('tit');
+  if(D)render();
+}
+
+function setMode(){
+  const del=document.querySelector('input[name=mode]:checked').value==='Delivery';
+  $('#locw').hidden=!del;$('#loc').required=del;$('#n').required=del;
+}
+
+function openOrder(i){
+  if(/0{6,}/.test(num())||!num()){alert(t('setnum'));return}
+  cur=i;$('#di').textContent=nm(i)+' - '+money(i.price)+(i.unit?' / '+i.unit:'');
+  setMode();$('#dlg').showModal();
+}
+
+function message(i,v){
+  const L=['Hello '+D.store.name+', I would like to order:',
+    '- '+i.name+' x '+v.q+(i.unit?' ('+i.unit+')':'')+' at '+money(i.price),
+    'Type: '+v.mode];
+  if(v.mode==='Delivery'&&v.loc)L.push('Location: '+v.loc);
+  if(v.n)L.push('Name: '+v.n);
+  if(v.p)L.push('Phone: '+v.p);
+  if(v.nt)L.push('Note: '+v.nt);
+  L.push('(Sent from the website)');
+  return L.join('\n');
+}
+
+function share(i){
+  const txt=i.name+' - '+money(i.price)+(i.unit?' / '+i.unit:'')+' at '+D.store.name+', Mirdif';
+  const url=location.href.split('#')[0];
+  if(navigator.share)navigator.share({title:D.store.name,text:txt,url}).catch(()=>{});
+  else window.open('https://wa.me/?text='+encodeURIComponent(txt+'\n'+url),'_blank','noopener');
+}
+
+document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener('change',setMode));
+$('#cancel').onclick=()=>$('#dlg').close();
+$('#lang').onclick=()=>{lang=lang==='en'?'ar':'en';applyLang()};
+$('#f').addEventListener('submit',e=>{
+  e.preventDefault();
+  const v={mode:document.querySelector('input[name=mode]:checked').value,n:$('#n').value.trim(),p:$('#p').value.trim(),loc:$('#loc').value.trim(),q:$('#q').value.trim()||'1',nt:$('#nt').value.trim()};
+  window.open('https://wa.me/'+num()+'?text='+encodeURIComponent(message(cur,v)),'_blank','noopener');
+  $('#dlg').close();$('#f').reset();
+});
+
+fetch('deals.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{D=d;$('#status')&&$('#status').remove();applyLang()}).catch(()=>{$('#status').textContent=t('fail')});
+applyLang();
+</script>
+</body>
+</html>
