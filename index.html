@@ -3,202 +3,126 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Coccinelle Supermarket Mirdif: Deals and Offers</title>
-<meta name="description" content="Today's deals, offers and new arrivals at Coccinelle Supermarket, The Commons, Mirdif. Order on WhatsApp.">
+<meta name="theme-color" content="#b9142b">
+<title>Coccinelle Supermarket | Mirdif, Dubai</title>
+<meta name="description" content="Fresh daily offers at Coccinelle Supermarket, The Commons, Mirdif. Shop our offers and order on WhatsApp.">
 <style>
-:root{--red:#c8101e;--ink:#1b1b1b;--tag:#ffd60a;--leaf:#1e7a3c;--bg:#f2f4f3;--card:#fff;--muted:#5d6461}
+:root{--red:#bd142b;--red-dark:#941024;--green:#174b36;--green2:#286348;--cream:#fffaf2;--ink:#20231f;--muted:#69716b;--gold:#f5c84c;--line:#e9e5dc;--white:#fff;--shadow:0 14px 38px rgba(28,38,30,.09}
 *{box-sizing:border-box}
-body{margin:0;font:16px/1.5 system-ui,"Segoe UI",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--ink)}
-header{background:var(--red);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px}
-header h1{margin:0;font-size:1.15rem;font-weight:800}
-button{font:inherit;cursor:pointer}
-button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
-#lang{background:#fff;color:var(--red);border:0;border-radius:999px;padding:6px 14px;font-weight:700}
-#sample{background:var(--tag);padding:8px 16px;font-weight:700;text-align:center}
-main{max-width:960px;margin:0 auto;padding:16px}
-h2.sec{margin:28px 0 12px;font-size:1.3rem}
-.muted{color:var(--muted);margin:6px 0}
-.deal{background:var(--card);border-radius:14px;overflow:hidden;border:3px solid var(--ink)}
-.pic{aspect-ratio:4/3;background:#dfe5e2;display:flex;align-items:center;justify-content:center;font-size:3rem;font-weight:800;color:#9aa5a0;overflow:hidden}
-.pic img{width:100%;height:100%;object-fit:cover;display:block}
-.body{padding:14px 16px 16px}
-.deal h2{margin:0 0 8px;font-size:1.7rem;line-height:1.15}
-.deal .tag strong{font-size:2.4rem}
-.deal .pic{aspect-ratio:16/10}
-.tag{display:inline-flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;background:var(--tag);border-bottom:4px solid var(--red);padding:6px 12px;border-radius:6px}
-.tag strong{font-size:1.4rem;color:var(--red);font-weight:800}
-.tag span{font-weight:700}
-.tag s{color:var(--muted)}
-.tag em{font-style:normal;background:var(--red);color:#fff;border-radius:4px;padding:0 6px;font-size:.85rem;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-.card{background:var(--card);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
-.card h3{margin:0 0 6px;font-size:1rem;line-height:1.25}
-.card .body{display:flex;flex-direction:column;gap:6px;flex:1}
-.card .tag{padding:3px 8px}
-.card .tag strong{font-size:1.1rem}
-.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:auto;padding-top:10px}
-.btn{border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:8px;padding:8px 12px;font-weight:700}
-.btn.go{background:var(--leaf);border-color:var(--leaf);color:#fff}
-footer{max-width:960px;margin:24px auto 0;padding:16px;font-size:.9rem;color:var(--muted)}
-footer a{color:var(--ink)}
-dialog{border:0;border-radius:14px;padding:0;width:min(440px,94vw)}
-dialog::backdrop{background:rgba(0,0,0,.55)}
-dialog form{padding:18px;display:flex;flex-direction:column;gap:10px}
-dialog h2{margin:0;font-size:1.2rem}
-dialog label{display:flex;flex-direction:column;gap:3px;font-weight:600}
-dialog input[type=text],dialog input[type=tel]{font:inherit;padding:9px;border:1px solid #9aa5a0;border-radius:8px}
-fieldset{border:0;padding:0;margin:0;display:flex;gap:16px}
-fieldset label{flex-direction:row;align-items:center;gap:6px}
-.row{display:flex;gap:8px;justify-content:flex-end;margin-top:6px}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+a{color:inherit}
+button,input{font:inherit}
+button{cursor:pointer}
+.wrap{width:min(1180px,calc(100% - 32px));margin:auto}
+.topline{background:var(--green);color:#fff;font-size:.82rem;padding:8px 0}
+.topline .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+header{position:sticky;top:0;z-index:10;background:rgba(255,250,242,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}
+.logo{width:45px;height:45px;border-radius:50%;background:var(--red);display:grid;place-items:center;color:white;font-weight:900;font-size:1.1rem;box-shadow:inset 0 0 0 3px rgba(255,255,255,.2)}
+.brand strong{display:block;font-size:1.25rem;line-height:1.1;letter-spacing:-.04em}
+.brand small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.04em}
+.navright{display:flex;align-items:center;gap:10px}
+.lang{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;color:var(--green);font-weight:700}
+.hero{padding:34px 0 28px}
+.hero-box{position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(120deg,#153f2d 0%,#1e5b3d 55%,#39744d 100%);color:#fff;min-height:330px;padding:clamp(26px,5vw,60px);display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:20px;box-shadow:var(--shadow)}
+.hero-box:after{content:"";position:absolute;width:380px;height:380px;border:1px solid rgba(255,255,255,.13);border-radius:50%;right:8%;top:-130px;box-shadow:0 0 0 35px rgba(255,255,255,.035),0 0 0 75px rgba(255,255,255,.025)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;font-weight:800;color:#f8d96e}
+.hero h1{font-size:clamp(2.4rem,5.4vw,4.8rem);line-height:.98;letter-spacing:-.055em;margin:15px 0}
+.hero p{max-width:520px;color:rgba(255,255,255,.8);font-size:1.05rem;margin:16px 0 24px}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:12px 19px;text-decoration:none;font-weight:800;transition:transform .18s,box-shadow .18s}
+.btn:hover{transform:translateY(-2px)}
+.btn.gold{background:var(--gold);color:#27251d}
+.btn.light{background:#fff;color:var(--green)}
+.hero-art{position:relative;z-index:1;display:grid;place-items:center}
+.hero-art img{width:min(100%,350px);aspect-ratio:1/1;object-fit:cover;border-radius:50%;border:8px solid rgba(255,255,255,.16);box-shadow:0 20px 45px rgba(0,0,0,.22)}
+.hero-bubble{position:absolute;bottom:0;left:0;background:var(--gold);color:#2b2b20;border-radius:18px;padding:12px 16px;font-weight:900;box-shadow:var(--shadow)}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 38px}
+.feature{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px 18px;display:flex;gap:12px;align-items:center}
+.feature .ico{font-size:1.5rem}
+.feature strong{display:block;font-size:.95rem}
+.feature span{display:block;color:var(--muted);font-size:.8rem}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:38px 0 18px}
+.section-head h2{font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-.04em;margin:0}
+.section-head p{margin:5px 0 0;color:var(--muted)}
+.search{width:min(300px,100%);padding:12px 16px;border:1px solid var(--line);background:#fff;border-radius:999px;outline:none}
+.search:focus{border-color:var(--green);box-shadow:0 0 0 3px #174b3618}
+.products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 5px 20px rgba(28,38,30,.035);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.photo{position:relative;aspect-ratio:4/3;background:#f0eee7;overflow:hidden}
+.photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+.card:hover .photo img{transform:scale(1.035)}
+.badge{position:absolute;top:13px;left:13px;background:var(--red);color:#fff;border-radius:999px;padding:6px 10px;font-size:.72rem;font-weight:900;letter-spacing:.04em}
+.card-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}
+.card h3{font-size:1.15rem;line-height:1.25;margin:0}
+.note{color:var(--muted);font-size:.9rem;margin:0;min-height:2.7em}
+.price-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.price{color:var(--red);font-size:1.45rem;font-weight:900;letter-spacing:-.03em}
+.unit{color:var(--muted);font-size:.85rem}
+.card .btn{width:100%;background:var(--green);color:white;margin-top:auto}
+.empty{grid-column:1/-1;text-align:center;padding:30px;color:var(--muted)}
+.order-banner{margin:48px 0;background:#f5e9d7;border:1px solid #ead7bb;border-radius:24px;padding:clamp(22px,4vw,38px);display:flex;justify-content:space-between;align-items:center;gap:20px}
+.order-banner h2{margin:0;font-size:clamp(1.5rem,3vw,2.3rem);letter-spacing:-.04em}
+.order-banner p{margin:7px 0 0;color:var(--muted)}
+.order-banner .btn{background:var(--red);color:#fff;white-space:nowrap}
+footer{background:#153f2d;color:#fff;margin-top:45px;padding:32px 0}
+.footer-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:24px}
+footer p,footer small{color:rgba(255,255,255,.72)}
+footer a{color:#fff}
+.footer-brand{font-size:1.3rem;font-weight:900}
+.copyright{border-top:1px solid rgba(255,255,255,.15);margin-top:24px;padding-top:16px;font-size:.8rem;color:rgba(255,255,255,.6)}
+[dir=rtl] .badge{left:auto;right:13px}
+[dir=rtl] .hero-bubble{left:auto;right:0}
+[dir=rtl] .topline .wrap{direction:rtl}
+[dir=rtl] .brand{direction:rtl}
+@media(max-width:760px){.hero-box{grid-template-columns:1fr;min-height:0;padding:28px}.hero-art{display:none}.features{grid-template-columns:1fr}.section-head{align-items:stretch;flex-direction:column}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card-body{padding:13px}.card h3{font-size:1rem}.price{font-size:1.2rem}.note{font-size:.82rem}.order-banner{align-items:flex-start;flex-direction:column}.footer-grid{grid-template-columns:1fr}}
+@media(max-width:420px){.products{grid-template-columns:1fr}.photo{aspect-ratio:16/10}.brand strong{font-size:1.05rem}}
 </style>
 </head>
 <body>
-<div id="sample" hidden>Sample data. Replace deals.json before publishing.</div>
-<header><h1 id="brand"></h1><button id="lang" type="button">العربية</button></header>
-<main id="main"><p class="muted" id="status">Loading deals…</p></main>
-<footer id="foot"></footer>
-
-<dialog id="dlg">
-<form id="f">
-<h2 id="dt"></h2>
-<p class="muted" id="di"></p>
-<fieldset>
-<label><input type="radio" name="mode" value="Delivery" checked><span id="l-del"></span></label>
-<label><input type="radio" name="mode" value="Pickup"><span id="l-pick"></span></label>
-</fieldset>
-<label><span id="l-n"></span><input type="text" id="n" autocomplete="name"></label>
-<label><span id="l-p"></span><input type="tel" id="p" inputmode="tel" autocomplete="tel"></label>
-<label id="locw"><span id="l-loc"></span><input type="text" id="loc"></label>
-<label><span id="l-q"></span><input type="text" id="q" value="1"></label>
-<label><span id="l-nt"></span><input type="text" id="nt"></label>
-<div class="row"><button type="button" class="btn" id="cancel"></button><button type="submit" class="btn go" id="send"></button></div>
-</form>
-</dialog>
-
+<div class="topline"><div class="wrap"><span id="topMsg">Fresh finds and great value in Mirdif</span><span>📍 The Commons, Mirdif, Dubai</span></div></div>
+<header><div class="wrap nav">
+<a class="brand" href="#"><span class="logo">C</span><span><strong>Coccinelle</strong><small>SUPERMARKET · MIRDIF</small></span></a>
+<div class="navright"><a class="btn light" href="https://wa.me/971585060627" id="navOrder">WhatsApp us</a><select class="lang" id="language" aria-label="Language"><option value="en">English</option><option value="ar">العربية</option><option value="fr">Français</option></select></div>
+</div></header>
+<main class="wrap">
+<section class="hero"><div class="hero-box">
+<div><span class="eyebrow" id="eyebrow">Freshness you can taste</span><h1 id="heroTitle">Good food.<br>Great everyday value.</h1><p id="heroText">Discover fresh produce and supermarket favourites at Coccinelle. Browse our latest offers and order conveniently on WhatsApp.</p>
+<div class="hero-actions"><a class="btn gold" href="#offers" id="heroShop">Explore offers ↓</a><a class="btn light" href="https://wa.me/971585060627" id="heroWhats">Order on WhatsApp</a></div></div>
+<div class="hero-art"><img src="file_00000000427481fa806d3e9bb5b4538c.png" alt="Fresh strawberries offer"><div class="hero-bubble" id="heroBubble">Fresh picks, happy days</div></div>
+</div></section>
+<section class="features">
+<div class="feature"><span class="ico">🍃</span><div><strong id="f1">Fresh selection</strong><span id="f1s">Carefully selected produce</span></div></div>
+<div class="feature"><span class="ico">💛</span><div><strong id="f2">Everyday value</strong><span id="f2s">Offers worth discovering</span></div></div>
+<div class="feature"><span class="ico">📲</span><div><strong id="f3">Easy WhatsApp orders</strong><span id="f3s">Order directly with our team</span></div></div>
+</section>
+<section id="offers">
+<div class="section-head"><div><h2 id="offersTitle">Our latest offers</h2><p id="offersSub">Fresh deals, selected for you.</p></div><input class="search" id="search" type="search" placeholder="Search products…" aria-label="Search products"></div>
+<div class="products" id="products"><p class="empty">Loading offers…</p></div>
+</section>
+<section class="order-banner"><div><h2 id="orderTitle">Need help with your order?</h2><p id="orderSub">Message our team on WhatsApp and we’ll be happy to help.</p></div><a class="btn" href="https://wa.me/971585060627" id="orderBtn">Chat with us on WhatsApp ↗</a></section>
+</main>
+<footer><div class="wrap"><div class="footer-grid"><div><div class="footer-brand">Coccinelle Supermarket</div><p id="footerDesc">Freshness, quality and everyday value in Mirdif.</p></div><div><strong id="visit">Visit us</strong><p>The Commons, Mirdif<br>Dubai, United Arab Emirates</p></div><div><strong id="contact">Contact & orders</strong><p><a href="https://wa.me/971585060627">+971 58 506 0627 · WhatsApp</a></p></div></div><div class="copyright">© <span id="year"></span> Coccinelle Supermarket. <span id="rights">All rights reserved.</span></div></div></footer>
 <script>
-const T={
-en:{deal:'Deal of the Day',offers:'Offers',arrivals:'New arrivals',order:'Order on WhatsApp',share:'Share',del:'Delivery',pick:'Pickup from store',n:'Your name',p:'WhatsApp number (optional)',loc:'Building, villa or area',q:'Quantity',nt:'Note (optional)',send:'Open WhatsApp',cancel:'Cancel',until:'Valid until',ended:'This deal has ended. Ask us for today’s deal.',loading:'Loading deals…',fail:'Could not load deals.json. Open this page through GitHub Pages or a web server.',hours:'Open',off:'off',setnum:'Store WhatsApp number is not set yet. Edit deals.json.',tit:'Order'},
-ar:{deal:'عرض اليوم',offers:'العروض',arrivals:'وصل حديثاً',order:'اطلب عبر واتساب',share:'مشاركة',del:'توصيل',pick:'استلام من المتجر',n:'الاسم',p:'رقم واتساب (اختياري)',loc:'المبنى أو الفيلا أو المنطقة',q:'الكمية',nt:'ملاحظة (اختياري)',send:'فتح واتساب',cancel:'إلغاء',until:'ساري حتى',ended:'انتهى هذا العرض. اسألونا عن عرض اليوم.',loading:'جارٍ تحميل العروض…',fail:'تعذر تحميل deals.json. افتح الصفحة عبر GitHub Pages أو خادم ويب.',hours:'ساعات العمل',off:'خصم',setnum:'لم يتم تحديد رقم واتساب المتجر بعد. عدّل ملف deals.json.',tit:'الطلب'}
-};
-let lang='en',D=null,cur=null;
-const $=s=>document.querySelector(s);
-const t=k=>T[lang][k]||k;
-function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!=null)e.textContent=txt;return e}
-const nm=i=>lang==='ar'&&i.name_ar?i.name_ar:i.name;
-const num=()=>String(D.store.whatsapp||'').replace(/\D/g,'');
-const money=v=>'AED '+Number(v).toFixed(2);
-
-function tagEl(i){
-  const g=el('div','tag');
-  g.append(el('strong',null,money(i.price)));
-  if(i.unit)g.append(el('span',null,'/ '+i.unit));
-  if(Number(i.normalPrice)>Number(i.price)){
-    g.append(el('s',null,money(i.normalPrice)));
-    g.append(el('em',null,Math.round((1-i.price/i.normalPrice)*100)+'% '+t('off')));
-  }
-  return g;
-}
-
-function card(i,big){
-  const c=el('article',big?'deal':'card');
-  const box=el('div','pic');
-  const letter=(nm(i)||'?').charAt(0);
-  if(i.image){
-    const im=new Image();im.alt=nm(i);im.loading='lazy';
-    im.onerror=()=>{im.remove();box.textContent=letter};
-    im.src=i.image;box.append(im);
-  }else box.textContent=letter;
-  c.append(box);
-  const b=el('div','body');
-  b.append(el(big?'h2':'h3',null,nm(i)));
-  b.append(tagEl(i));
-  const note=lang==='ar'&&i.note_ar?i.note_ar:i.note;
-  if(note)b.append(el('p','muted',note));
-  if(i.validUntil){
-    const over=new Date(i.validUntil+'T23:59:59')<new Date();
-    b.append(el('p','muted',over?t('ended'):t('until')+' '+i.validUntil));
-  }
-  const a=el('div','acts');
-  const ob=el('button','btn go',t('order'));ob.type='button';ob.onclick=()=>openOrder(i);a.append(ob);
-  if(big){const sb=el('button','btn',t('share'));sb.type='button';sb.onclick=()=>share(i);a.append(sb)}
-  b.append(a);c.append(b);return c;
-}
-
-function render(){
-  const m=$('#main');m.replaceChildren();
-  if(D.dealOfTheDay){m.append(el('h2','sec',t('deal')));m.append(card(D.dealOfTheDay,true))}
-  [['offers','offers'],['newArrivals','arrivals']].forEach(([k,lab])=>{
-    const L=D[k]||[];if(!L.length)return;
-    m.append(el('h2','sec',t(lab)));
-    const g=el('div','grid');L.forEach(i=>g.append(card(i,false)));m.append(g);
-  });
-  const f=$('#foot');f.replaceChildren();
-  const s=D.store;
-  f.append(el('p',null,s.name+' | '+s.address));
-  if(s.hours)f.append(el('p',null,t('hours')+': '+s.hours));
-  if(s.deliveryNote)f.append(el('p',null,s.deliveryNote));
-  const links=el('p');
-  [['Instagram',s.instagram],['Facebook',s.facebook],['Website',s.website]].forEach(([n,u])=>{
-    if(!u)return;const a=el('a',null,n);a.href=u;a.rel='noopener';a.target='_blank';links.append(a,' ');
-  });
-  f.append(links);
-  if(s.disclaimer)f.append(el('p',null,s.disclaimer));
-  if(s.advertiserPermit)f.append(el('p',null,'Advertiser Permit: '+s.advertiserPermit));
-}
-
-function applyLang(){
-  document.documentElement.lang=lang;
-  document.documentElement.dir=lang==='ar'?'rtl':'ltr';
-  $('#lang').textContent=lang==='ar'?'English':'العربية';
-  $('#brand').textContent=D?D.store.name:'';
-  $('#sample').hidden=!(D&&D.sample===true);
-  [['l-del','del'],['l-pick','pick'],['l-n','n'],['l-p','p'],['l-loc','loc'],['l-q','q'],['l-nt','nt'],['send','send'],['cancel','cancel']].forEach(([id,k])=>{$('#'+id).textContent=t(k)});
-  $('#dt').textContent=t('tit');
-  if(D)render();
-}
-
-function setMode(){
-  const del=document.querySelector('input[name=mode]:checked').value==='Delivery';
-  $('#locw').hidden=!del;$('#loc').required=del;$('#n').required=del;
-}
-
-function openOrder(i){
-  if(/0{6,}/.test(num())||!num()){alert(t('setnum'));return}
-  cur=i;$('#di').textContent=nm(i)+' - '+money(i.price)+(i.unit?' / '+i.unit:'');
-  setMode();$('#dlg').showModal();
-}
-
-function message(i,v){
-  const L=['Hello '+D.store.name+', I would like to order:',
-    '- '+i.name+' x '+v.q+(i.unit?' ('+i.unit+')':'')+' at '+money(i.price),
-    'Type: '+v.mode];
-  if(v.mode==='Delivery'&&v.loc)L.push('Location: '+v.loc);
-  if(v.n)L.push('Name: '+v.n);
-  if(v.p)L.push('Phone: '+v.p);
-  if(v.nt)L.push('Note: '+v.nt);
-  L.push('(Sent from the website)');
-  return L.join('\n');
-}
-
-function share(i){
-  const txt=i.name+' - '+money(i.price)+(i.unit?' / '+i.unit:'')+' at '+D.store.name+', Mirdif';
-  const url=location.href.split('#')[0];
-  if(navigator.share)navigator.share({title:D.store.name,text:txt,url}).catch(()=>{});
-  else window.open('https://wa.me/?text='+encodeURIComponent(txt+'\n'+url),'_blank','noopener');
-}
-
-document.querySelectorAll('input[name=mode]').forEach(r=>r.addEventListener('change',setMode));
-$('#cancel').onclick=()=>$('#dlg').close();
-$('#lang').onclick=()=>{lang=lang==='en'?'ar':'en';applyLang()};
-$('#f').addEventListener('submit',e=>{
-  e.preventDefault();
-  const v={mode:document.querySelector('input[name=mode]:checked').value,n:$('#n').value.trim(),p:$('#p').value.trim(),loc:$('#loc').value.trim(),q:$('#q').value.trim()||'1',nt:$('#nt').value.trim()};
-  window.open('https://wa.me/'+num()+'?text='+encodeURIComponent(message(cur,v)),'_blank','noopener');
-  $('#dlg').close();$('#f').reset();
-});
-
-fetch('deals.json',{cache:'no-store'}).then(r=>r.json()).then(d=>{D=d;$('#status')&&$('#status').remove();applyLang()}).catch(()=>{$('#status').textContent=t('fail')});
-applyLang();
+const I18N={
+en:{top:"Fresh finds and great value in Mirdif",eyebrow:"Freshness you can taste",heroTitle:"Good food.<br>Great everyday value.",heroText:"Discover fresh produce and supermarket favourites at Coccinelle. Browse our latest offers and order conveniently on WhatsApp.",shop:"Explore offers ↓",whats:"Order on WhatsApp",bubble:"Fresh picks, happy days",f1:"Fresh selection",f1s:"Carefully selected produce",f2:"Everyday value",f2s:"Offers worth discovering",f3:"Easy WhatsApp orders",f3s:"Order directly with our team",offers:"Our latest offers",sub:"Fresh deals, selected for you.",search:"Search products…",orderTitle:"Need help with your order?",orderSub:"Message our team on WhatsApp and we’ll be happy to help.",orderBtn:"Chat with us on WhatsApp ↗",visit:"Visit us",contact:"Contact & orders",footer:"Freshness, quality and everyday value in Mirdif.",rights:"All rights reserved.",order:"Order on WhatsApp",per:"per pack",each:"each",loading:"Loading offers…",fail:"Could not load offers. Please refresh the page.",no:"No products match your search.",from:"From "},
+ar:{top:"منتجات طازجة وقيمة رائعة في مردف",eyebrow:"ط freshness يمكنك تذوقها",heroTitle:"طعام طازج.<br>قيمة رائعة كل يوم.",heroText:"اكتشف المنتجات الطازجة والمفضلة في سوبرماركت كوكينيل. تصفح عروضنا واطلب بسهولة عبر واتساب.",shop:"اكتشف العروض ↓",whats:"اطلب عبر واتساب",bubble:"اختيارات طازجة وأيام سعيدة",f1:"منتجات طازجة",f1s:"منتجات مختارة بعناية",f2:"قيمة يومية",f2s:"عروض تستحق اكتشافها",f3:"طلب سهل عبر واتساب",f3s:"اطلب مباشرة من فريقنا",offers:"أحدث عروضنا",sub:"عروض طازجة مختارة لك.",search:"ابحث عن المنتجات…",orderTitle:"هل تحتاج مساعدة في طلبك؟",orderSub:"راسل فريقنا عبر واتساب وسيسعدنا مساعدتك.",orderBtn:"تواصل معنا عبر واتساب ↗",visit:"زورونا",contact:"التواصل والطلبات",footer:"الط freshness والجودة والقيمة اليومية في مردف.",rights:"جميع الحقوق محفوظة.",order:"اطلب عبر واتساب",per:"للحزمة",each:"للحبة",loading:"جارٍ تحميل العروض…",fail:"تعذر تحميل العروض. يرجى تحديث الصفحة.",no:"لا توجد منتجات مطابقة للبحث.",from:"ابتداءً من "},
+fr:{top:"Fraîcheur et petits prix à Mirdif",eyebrow:"La fraîcheur à chaque bouchée",heroTitle:"Du bon goût.<br>De belles offres chaque jour.",heroText:"Découvrez les produits frais et les essentiels chez Coccinelle. Consultez nos offres et commandez facilement sur WhatsApp.",shop:"Voir les offres ↓",whats:"Commander sur WhatsApp",bubble:"Fraîcheur et bonne humeur",f1:"Sélection fraîche",f1s:"Des produits soigneusement choisis",f2:"Prix avantageux",f2s:"Des offres à découvrir",f3:"Commande WhatsApp facile",f3s:"Commandez directement auprès de notre équipe",offers:"Nos offres du moment",sub:"Des offres fraîches, sélectionnées pour vous.",search:"Rechercher un produit…",orderTitle:"Besoin d’aide pour votre commande ?",orderSub:"Écrivez-nous sur WhatsApp, nous serons ravis de vous aider.",orderBtn:"Contactez-nous sur WhatsApp ↗",visit:"Nous rendre visite",contact:"Contact et commandes",footer:"Fraîcheur, qualité et bons prix à Mirdif.",rights:"Tous droits réservés.",order:"Commander sur WhatsApp",per:"par paquet",each:"à l’unité",loading:"Chargement des offres…",fail:"Impossible de charger les offres. Actualisez la page.",no:"Aucun produit ne correspond à votre recherche.",from:"À partir de "}};
+let lang="en",deals=[];
+const $=id=>document.getElementById(id);
+function applyLang(){const t=I18N[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+["topMsg","eyebrow","heroText","heroShop","heroWhats","heroBubble","f1","f1s","f2","f2s","f3","f3s","offersTitle","offersSub","orderTitle","orderSub","orderBtn","visit","contact","footerDesc","rights"].forEach((id,i)=>{});
+$("topMsg").textContent=t.top;$("eyebrow").textContent=t.eyebrow;$("heroTitle").innerHTML=t.heroTitle;$("heroText").textContent=t.heroText;$("heroShop").textContent=t.shop;$("heroWhats").textContent=t.whats;$("heroBubble").textContent=t.bubble;
+["f1","f1s","f2","f2s","f3","f3s","offersTitle","offersSub","orderTitle","orderSub","orderBtn","visit","contact","footerDesc","rights"].forEach(id=>{const map={f1:"f1",f1s:"f1s",f2:"f2",f2s:"f2s",f3:"f3",f3s:"f3s",offersTitle:"offers",offersSub:"sub",orderTitle:"orderTitle",orderSub:"orderSub",orderBtn:"orderBtn",visit:"visit",contact:"contact",footerDesc:"footer",rights:"rights"};$ (id).textContent=t[map[id]]});
+$("search").placeholder=t.search;render();}
+function productName(p){if(lang==="ar"&&p.name_ar)return p.name_ar;if(lang==="fr"&&p.name_fr)return p.name_fr;return p.name;}
+function render(){const root=$("products");root.replaceChildren();const q=$("search").value.toLowerCase();const items=(deals.offers||[]).filter(p=>productName(p).toLowerCase().includes(q)||(p.note||"").toLowerCase().includes(q));if(!items.length){root.innerHTML='<p class="empty">'+I18N[lang].no+'</p>';return}
+items.forEach((p,i)=>{const c=document.createElement("article");c.className="card";const photo=document.createElement("div");photo.className="photo";const img=document.createElement("img");img.src=p.image||"";img.alt=productName(p);img.loading="lazy";img.onerror=()=>{photo.style.background="#e9eee9";img.style.display="none";};photo.append(img);const badge=document.createElement("span");badge.className="badge";badge.textContent=lang==="ar"?"عرض خاص":lang==="fr"?"OFFRE":"SPECIAL OFFER";photo.append(badge);c.append(photo);const body=document.createElement("div");body.className="card-body";const h=document.createElement("h3");h.textContent=productName(p);body.append(h);const pr=document.createElement("div");pr.className="price-row";const price=document.createElement("span");price.className="price";price.textContent=p.priceRange||(p.name.includes("Pomegranate")?(lang==="ar"?"5–7 درهم":lang==="fr"?"5–7 AED":"AED 5–7"):"AED "+Number(p.price).toFixed(2));pr.append(price);if(p.unit){const u=document.createElement("span");u.className="unit";u.textContent=p.unit==="each"?I18N[lang].each:p.unit==="per pack"?I18N[lang].per:p.unit;pr.append(u)}body.append(pr);if(p.note){const note=document.createElement("p");note.className="note";note.textContent=p.note;body.append(note)}const btn=document.createElement("a");btn.className="btn";btn.href="https://wa.me/"+String(deals.store.whatsapp||"971585060627").replace(/\D/g,"")+"?text="+encodeURIComponent((lang==="ar"?"مرحباً، أريد طلب: ":lang==="fr"?"Bonjour, je souhaite commander : ":"Hello, I would like to order: ")+productName(p)+" — AED "+(p.priceRange||p.price)+(p.unit?" / "+p.unit:""));btn.target="_blank";btn.rel="noopener";btn.textContent=I18N[lang].order;body.append(btn);c.append(body);root.append(c);});}
+$("language").addEventListener("change",e=>{lang=e.target.value;applyLang()});$("search").addEventListener("input",render);$("year").textContent=new Date().getFullYear();
+fetch("deals.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error();return r.json()}).then(d=>{deals=d;render()}).catch(()=>{$("products").innerHTML='<p class="empty">'+I18N[lang].fail+'</p>'});
 </script>
 </body>
 </html>
