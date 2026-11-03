@@ -20,7 +20,7 @@ button{cursor:pointer}
 header{position:sticky;top:0;z-index:10;background:rgba(255,250,242,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}
-.logo{width:45px;height:45px;border-radius:50%;background:var(--red);display:grid;place-items:center;color:white;font-weight:900;font-size:1.1rem;box-shadow:inset 0 0 0 3px rgba(255,255,255,.2)}
+.logo{width:45px;height:45px;border-radius:50%;background:var(--red);display:grid;place-items:center;color:white;font-weight:900;font-size:1.1rem;box-shadow:inset 0 0 0 3px rgba(255,255,255,.2)}\n.brand-logo-img{width:min(250px,48vw);height:auto;max-height:56px;object-fit:contain;display:block}\n.hero-art img{object-fit:cover}
 .brand strong{display:block;font-size:1.25rem;line-height:1.1;letter-spacing:-.04em}
 .brand small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.04em}
 .navright{display:flex;align-items:center;gap:10px}
@@ -85,14 +85,14 @@ footer a{color:#fff}
 <body>
 <div class="topline"><div class="wrap"><span id="topMsg">Fresh finds and great value in Mirdif</span><span>📍 The Commons, Mirdif, Dubai</span></div></div>
 <header><div class="wrap nav">
-<a class="brand" href="#"><span class="logo">C</span><span><strong>Coccinelle</strong><small>SUPERMARKET · MIRDIF</small></span></a>
+<a class="brand" href="#" aria-label="Coccinelle Supermarket"><img class="brand-logo-img" src="https://dilshanpm104-design.github.io/COCCINELLE/file_00000000f1a881fa89ec7f0cffb0014b.png" alt="Coccinelle Supermarket logo"></a>
 <div class="navright"><a class="btn light" href="https://wa.me/971585060627" id="navOrder">WhatsApp us</a><select class="lang" id="language" aria-label="Language"><option value="en">English</option><option value="ar">العربية</option><option value="fr">Français</option></select></div>
 </div></header>
 <main class="wrap">
 <section class="hero"><div class="hero-box">
 <div><span class="eyebrow" id="eyebrow">Freshness you can taste</span><h1 id="heroTitle">Good food.<br>Great everyday value.</h1><p id="heroText">Discover fresh produce and supermarket favourites at Coccinelle. Browse our latest offers and order conveniently on WhatsApp.</p>
 <div class="hero-actions"><a class="btn gold" href="#offers" id="heroShop">Explore offers ↓</a><a class="btn light" href="https://wa.me/971585060627" id="heroWhats">Order on WhatsApp</a></div></div>
-<div class="hero-art"><img src="file_00000000427481fa806d3e9bb5b4538c.png" alt="Fresh strawberries offer"><div class="hero-bubble" id="heroBubble">Fresh picks, happy days</div></div>
+<div class="hero-art"><img src="https://dilshanpm104-design.github.io/COCCINELLE/file_00000000427481fa806d3e9bb5b4538c.png" alt="Fresh strawberries offer"><div class="hero-bubble" id="heroBubble">Fresh picks, happy days</div></div>
 </div></section>
 <section class="features">
 <div class="feature"><span class="ico">🍃</span><div><strong id="f1">Fresh selection</strong><span id="f1s">Carefully selected produce</span></div></div>
