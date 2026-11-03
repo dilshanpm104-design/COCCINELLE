@@ -13,42 +13,42 @@
       "price": 19.5,
       "unit": "per pack",
       "note": "Fresh USA strawberries. Poster price: AED 19.50.",
-      "image": "file_00000000427481fa806d3e9bb5b4538c.png"
+      "image": "https://dilshanpm104-design.github.io/COCCINELLE/file_00000000427481fa806d3e9bb5b4538c.png"
     },
     {
       "name": "Red Grapes — Egypt",
       "price": 8.75,
       "unit": "per pack",
       "note": "Egyptian red grapes. Poster price: AED 8.75.",
-      "image": "file_000000005d708211955b562feceb1f7b.png"
+      "image": "https://dilshanpm104-design.github.io/COCCINELLE/file_000000005d708211955b562feceb1f7b.png"
     },
     {
       "name": "White Grapes",
       "price": 9.45,
       "unit": "per pack",
       "note": "White grapes. Poster price: AED 9.45.",
-      "image": "file_0000000090fc82119488fa0c9770c2a9.png"
+      "image": "https://dilshanpm104-design.github.io/COCCINELLE/file_0000000090fc82119488fa0c9770c2a9.png"
     },
     {
       "name": "Pomegranate Arils — India",
       "price": 5,
       "unit": "per pack",
       "note": "Price range AED 5–7 per pack. Please confirm the exact price with the store before ordering.",
-      "image": "file_00000000b69481faa7bf64b67b9be163.png"
+      "image": "https://dilshanpm104-design.github.io/COCCINELLE/file_00000000b69481faa7bf64b67b9be163.png"
     },
     {
       "name": "Sweet Corn — Farmila",
       "price": 6.99,
       "unit": "250 g pack",
       "note": "Ready-to-eat sweet corn. Poster price: AED 6.99.",
-      "image": "file_00000000c29c82118a50f57073506c55.png"
+      "image": "https://dilshanpm104-design.github.io/COCCINELLE/file_00000000c29c82118a50f57073506c55.png"
     },
     {
       "name": "Tender Coconut — Vietnam",
       "price": 8.99,
       "unit": "each",
       "note": "Fresh young coconut from Vietnam. Poster price: AED 8.99.",
-      "image": "file_00000000e148820a80787139d8583213.png"
+      "image": "https://dilshanpm104-design.github.io/COCCINELLE/file_00000000e148820a80787139d8583213.png"
     }
   ],
   "newArrivals": []
