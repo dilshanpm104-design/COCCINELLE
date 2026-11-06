@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#174b36">
+<meta name="theme-color" content="#1c1a1a">
 <title>COCCINELLE Supermarket | Admin</title>
 <style>
-:root{--green:#174b36;--red:#bd142b;--line:#e7e4dc;--ink:#20231f;--muted:#69716b;--bg:#f4f6f3}
+:root{--green:#1c1a1a;--red:#d9202f;--line:#e7e4dc;--ink:#20231f;--muted:#69716b;--bg:#f4f6f3}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,Segoe UI,Arial}
-button,input,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;font-weight:700}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:11px 15px;font-weight:700}
 button:disabled{opacity:.55;cursor:not-allowed}.primary{background:var(--green);color:white}.secondary{background:#e8eee9;color:var(--green)}.danger{background:#fee8e8;color:#a41425}
 .top{background:var(--green);color:white;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}.top h1{font-size:19px;margin:0}
 .wrap{max-width:1120px;margin:auto;padding:20px}.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:20px;margin:18px 0;box-shadow:0 5px 20px #182d1b08}
 .hidden{display:none!important}.field{display:flex;flex-direction:column;gap:6px;min-width:0}.field.full{grid-column:1/-1}
 .formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}label{font-weight:700;font-size:13px}
-input,textarea{width:100%;border:1px solid #d9ded8;border-radius:9px;padding:11px;background:white;color:var(--ink)}textarea{min-height:76px;resize:vertical}
+input,textarea,select{width:100%;border:1px solid #d9ded8;border-radius:9px;padding:11px;background:white;color:var(--ink)}textarea{min-height:76px;resize:vertical}
 input[type=checkbox]{width:auto}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.muted{color:var(--muted)}.small{font-size:12px}
 .status{font-size:13px;margin-top:9px;overflow-wrap:anywhere}.error{color:#a41425}
 .notice{padding:12px 14px;border-radius:10px;background:#fff4d5;color:#614c08;margin:12px 0}
@@ -38,23 +38,26 @@ input[type=checkbox]{width:auto}.row{display:flex;gap:10px;flex-wrap:wrap;align-
 </form><p class="small muted">Never share your password. Only the authorised Firebase admin account can make changes.</p>
 </section>
 <section id="appPanel" class="hidden">
-<div class="notice">Product photos use public GitHub Raw image URLs. This page does not upload files to Firebase Storage. Products are saved in the Firestore <strong>products</strong> collection.</div>
+<div class="notice">Photos are resized on your phone and saved with the product. The image URL box is optional.</div>
 <section class="panel"><div class="row" style="justify-content:space-between"><div><h2 style="margin:0">Product management</h2><div class="muted">Add, edit, search and delete supermarket products.</div></div><button id="newProduct" class="primary" type="button">＋ Add product</button></div>
-<div class="toolbar" style="margin-top:14px"><input id="searchProducts" type="search" placeholder="Search product name or category"><button id="refreshProducts" class="secondary" type="button">Refresh</button></div><div id="status" class="status" role="status"></div></section>
+<div class="toolbar" style="margin-top:14px"><input id="searchProducts" type="search" placeholder="Search product name or category"><button id="refreshProducts" class="secondary" type="button">Refresh</button><button id="seed" class="secondary" type="button">Load sample products</button></div><div id="status" class="status" role="status"></div></section>
 <section id="editor" class="panel hidden"><h2 id="editorTitle">Add product</h2><form id="productForm"><input id="docId" type="hidden">
 <div class="formgrid">
 <div class="field"><label for="name">Product name (English) *</label><input id="name" required maxlength="160"></div>
 <div class="field"><label for="price">Price (AED) *</label><input id="price" type="number" min="0" step="0.01" required></div>
-<div class="field"><label for="unit">Unit</label><input id="unit" placeholder="each, per pack, 1 L"></div>
-<div class="field"><label for="category">Category</label><input id="category" placeholder="Dairy, Grocery, Fruit"></div>
+<div class="field"><label for="unit">Sold by</label><select id="unit"><option value="kg">per kg</option><option value="pc">per piece</option><option value="pack">per pack</option></select></div>
+<div class="field"><label for="category">Category</label><select id="category"></select></div>
+<div class="field"><label for="oldPrice">Old price (only for an offer)</label><input id="oldPrice" type="number" min="0" step="0.01"></div>
 <div class="field full"><label for="note">Description (English)</label><textarea id="note"></textarea></div>
 <div class="field"><label for="nameAr">Arabic name (optional)</label><input id="nameAr" dir="auto"></div>
 <div class="field"><label for="nameFr">French name (optional)</label><input id="nameFr"></div>
 <div class="field"><label for="noteAr">Arabic description (optional)</label><textarea id="noteAr" dir="auto"></textarea></div>
 <div class="field"><label for="noteFr">French description (optional)</label><textarea id="noteFr"></textarea></div>
+<div class="field full"><label for="photo">Product photo (take a photo or choose one)</label><input id="photo" type="file" accept="image/*"><img id="photoPreview" class="preview hidden" alt="Photo preview"></div>
 <div class="field full"><label for="imageUrl">Product image URL (GitHub Raw URL)</label><input id="imageUrl" type="url" placeholder="https://raw.githubusercontent.com/username/repository/main/images/product.png">
 <div class="small muted">Upload the image to your GitHub repository first, then paste its Raw URL. Do not use the normal github.com/blob URL.</div><img id="imagePreview" class="preview hidden" alt="Product image preview"><div id="imageStatus" class="small muted"></div></div>
 <div class="field full"><label><input id="available" type="checkbox" checked> Available on website</label></div>
+<div class="field full"><label><input id="deal" type="checkbox"> Deal of the day (only one product at a time)</label></div>
 </div><div class="row" style="margin-top:16px"><button id="saveProduct" class="primary" type="submit">Save product</button><button id="cancel" class="secondary" type="button">Cancel</button></div>
 </form></section><div id="products" class="products"></div>
 </section></main>
@@ -74,6 +77,12 @@ const firebaseConfig = {
 };
 const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app);
 const $=id=>document.getElementById(id);
+const CATS=[["fruits-veg", "Fruits & Vegetables"], ["meat-fish", "Meat & Fish"], ["dairy-eggs", "Dairy & Eggs"], ["bakery", "Bakery"], ["grocery", "Grocery & Pantry"], ["beverages", "Beverages"], ["snacks", "Snacks & Sweets"], ["frozen", "Frozen Food"], ["household", "Household"], ["personal-care", "Health & Beauty"]];let photoData="";
+$("category").innerHTML=CATS.map(c=>`<option value="${c[0]}">${c[1].replace("&","&amp;")}</option>`).join("");
+function setSel(id,v){const s=$(id);if(![...s.options].some(o=>o.value==v)){const o=document.createElement("option");o.value=o.textContent=v;s.append(o)}s.value=v}
+const shrink=f=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>{const s=Math.min(1,320/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);c.getContext("2d").drawImage(i,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.72))};i.onerror=()=>no(new Error("Could not read the photo"));i.src=URL.createObjectURL(f)});
+$("photo").addEventListener("change",async e=>{const f=e.target.files[0];if(!f)return;try{photoData=await shrink(f);$("photoPreview").src=photoData;$("photoPreview").classList.remove("hidden")}catch(err){message("status",err.message,true)}});
+
 let currentUser=null, currentProducts=[];
 
 function message(id,text,error=false){$(id).textContent=text;$(id).className="status"+(error?" error":"");}
@@ -106,7 +115,7 @@ $("loginForm").addEventListener("submit",async e=>{
   finally{$("login").disabled=false;}
 });
 $("logout").addEventListener("click",async()=>{try{await signOut(auth);}catch(e){message("status",errorText(e),true);}});
-function clearEditor(){$("productForm").reset();$("docId").value="";$("imagePreview").src="";$("imagePreview").classList.add("hidden");$("imageStatus").textContent="";}
+function clearEditor(){photoData="";$("photoPreview").classList.add("hidden");$("productForm").reset();$("docId").value="";$("imagePreview").src="";$("imagePreview").classList.add("hidden");$("imageStatus").textContent="";}
 function previewImage(){
   const url=$("imageUrl").value.trim(),img=$("imagePreview");
   if(!url){img.src="";img.classList.add("hidden");$("imageStatus").textContent="";return;}
@@ -119,7 +128,7 @@ function openEditor(p=null){
   clearEditor();$("editor").classList.remove("hidden");$("editorTitle").textContent=p?"Edit product":"Add product";
   if(p){
     $("docId").value=p.id;$("name").value=p.name||"";$("price").value=p.price??"";
-    $("unit").value=p.unit||"";$("category").value=p.category||"";
+    setSel("unit",p.unit||"pc");setSel("category",p.category||CATS[0][0]);$("oldPrice").value=p.oldPrice||"";$("deal").checked=!!p.deal;photoData=p.imageData||"";if(photoData){$("photoPreview").src=photoData;$("photoPreview").classList.remove("hidden")}
     $("note").value=p.note||p.description||"";$("nameAr").value=p.nameAr||"";$("nameFr").value=p.nameFr||"";
     $("noteAr").value=p.noteAr||"";$("noteFr").value=p.noteFr||"";
     $("imageUrl").value=p.imageUrl||p.image||"";$("available").checked=p.available!==false;previewImage();
@@ -135,7 +144,7 @@ function renderProducts(){
   list.sort((a,b)=>(a.name||"").localeCompare(b.name||""));
   for(const p of list){
     const card=document.createElement("article");card.className="product";
-    const img=document.createElement("img");img.src=p.imageUrl||p.image||"";img.alt=p.name||"Product";img.onerror=()=>img.style.display="none";
+    const img=document.createElement("img");img.src=p.imageUrl||p.imageData||p.image||"";img.alt=p.name||"Product";img.onerror=()=>img.style.display="none";
     const info=document.createElement("div");info.className="info";
     const title=document.createElement("h3");title.textContent=p.name||"Unnamed product";
     const price=document.createElement("div");price.className="price";price.textContent=`AED ${Number(p.price||0).toFixed(2)} ${p.unit||""}`;
@@ -159,8 +168,8 @@ $("productForm").addEventListener("submit",async e=>{
   const imageUrl=$("imageUrl").value.trim();
   if(imageUrl){try{const u=new URL(imageUrl);if(u.protocol!=="https:")throw new Error();}catch{message("status","Enter a valid HTTPS image URL.",true);return;}}
   const data={
-    name:$("name").value.trim(),price:Number($("price").value),unit:$("unit").value.trim(),
-    category:$("category").value.trim(),note:$("note").value.trim(),nameAr:$("nameAr").value.trim(),
+    name:$("name").value.trim(),price:Number($("price").value),unit:$("unit").value,
+    category:$("category").value,oldPrice:Number($("oldPrice").value)||0,deal:$("deal").checked,imageData:photoData,note:$("note").value.trim(),nameAr:$("nameAr").value.trim(),
     nameFr:$("nameFr").value.trim(),noteAr:$("noteAr").value.trim(),noteFr:$("noteFr").value.trim(),
     imageUrl,available:$("available").checked,updatedAt:serverTimestamp(),updatedBy:currentUser.uid
   };
@@ -169,10 +178,12 @@ $("productForm").addEventListener("submit",async e=>{
     const id=$("docId").value;
     if(id)await updateDoc(doc(db,"products",id),data);
     else{data.createdAt=serverTimestamp();await addDoc(collection(db,"products"),data);}
+    if(data.deal){for(const o of currentProducts){if(o.deal&&o.id!==id)await updateDoc(doc(db,"products",o.id),{deal:false});}}
     $("editor").classList.add("hidden");clearEditor();await loadProducts();message("status","Product saved successfully.");
   }catch(err){console.error("Save error",err);message("status",errorText(err),true);}
   finally{$("saveProduct").disabled=false;}
 });
+$("seed").addEventListener("click",async()=>{if(!currentUser)return;if(!confirm("Add the 50 sample products? You can edit or delete them afterwards."))return;message("status","Adding sample products…");try{const d=await(await fetch("products.json",{cache:"no-store"})).json();for(const p of d.p){await addDoc(collection(db,"products"),{name:p.n,price:p.pr,oldPrice:p.old||0,unit:p.u,category:p.c,emoji:p.e||"",deal:!!p.deal,available:true,imageUrl:"",createdAt:serverTimestamp(),updatedBy:currentUser.uid})}await loadProducts();message("status","Sample products added.")}catch(e){message("status",errorText(e),true)}});
 </script>
 </body>
 </html>
