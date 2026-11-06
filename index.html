@@ -1,130 +1,115 @@
-<!doctype html>
-<html lang="en" dir="ltr">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#b9142b">
-<title>Coccinelle Supermarket | Mirdif, Dubai</title>
-<meta name="description" content="Fresh daily offers at Coccinelle Supermarket, The Commons, Mirdif. Shop our offers and order on WhatsApp.">
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Coccinelle Supermarket, Mirdif</title><meta name="description" content="Fresh food and everyday essentials at The Commons, Mirdif. Order on WhatsApp. Free delivery within about 2.5 km.">
 <style>
-:root{--red:#bd142b;--red-dark:#941024;--green:#174b36;--green2:#286348;--cream:#fffaf2;--ink:#20231f;--muted:#69716b;--gold:#f5c84c;--line:#e9e5dc;--white:#fff;--shadow:0 14px 38px rgba(28,38,30,.09);}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+:root{--r:#d9202f;--rd:#a8121e;--k:#1c1a1a;--c:#fdf1ea;--g:#6b6560}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--k);background:#fff}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif}
 a{color:inherit}
-button,input{font:inherit}
-button{cursor:pointer}
-.wrap{width:min(1180px,calc(100% - 32px));margin:auto}
-.topline{background:var(--green);color:#fff;font-size:.82rem;padding:8px 0}
-.topline .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
-header{position:sticky;top:0;z-index:10;background:rgba(255,250,242,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0}
-.brand{display:flex;align-items:center;gap:10px;text-decoration:none;min-width:0}
-.logo{width:45px;height:45px;border-radius:50%;background:var(--red);display:grid;place-items:center;color:white;font-weight:900;font-size:1.1rem;box-shadow:inset 0 0 0 3px rgba(255,255,255,.2)}
-.brand-logo-img{width:min(250px,48vw);height:auto;max-height:56px;object-fit:contain;display:block}
-.hero-art img{object-fit:cover}
-.brand strong{display:block;font-size:1.25rem;line-height:1.1;letter-spacing:-.04em}
-.brand small{display:block;color:var(--muted);font-size:.72rem;letter-spacing:.04em}
-.navright{display:flex;align-items:center;gap:10px}
-.lang{border:1px solid var(--line);background:#fff;border-radius:999px;padding:9px 12px;color:var(--green);font-weight:700}
-.hero{padding:34px 0 28px}
-.hero-box{position:relative;overflow:hidden;border-radius:28px;background:linear-gradient(120deg,#153f2d 0%,#1e5b3d 55%,#39744d 100%);color:#fff;min-height:330px;padding:clamp(26px,5vw,60px);display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:20px;box-shadow:var(--shadow)}
-.hero-box:after{content:"";position:absolute;width:380px;height:380px;border:1px solid rgba(255,255,255,.13);border-radius:50%;right:8%;top:-130px;box-shadow:0 0 0 35px rgba(255,255,255,.035),0 0 0 75px rgba(255,255,255,.025)}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.14em;font-size:.75rem;font-weight:800;color:#f8d96e}
-.hero h1{font-size:clamp(2.4rem,5.4vw,4.8rem);line-height:.98;letter-spacing:-.055em;margin:15px 0}
-.hero p{max-width:520px;color:rgba(255,255,255,.8);font-size:1.05rem;margin:16px 0 24px}
-.hero-actions{display:flex;gap:10px;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:12px 19px;text-decoration:none;font-weight:800;transition:transform .18s,box-shadow .18s}
-.btn:hover{transform:translateY(-2px)}
-.btn.gold{background:var(--gold);color:#27251d}
-.btn.light{background:#fff;color:var(--green)}
-.hero-art{position:relative;z-index:1;display:grid;place-items:center}
-.hero-art img{width:min(100%,350px);aspect-ratio:1/1;object-fit:cover;border-radius:50%;border:8px solid rgba(255,255,255,.16);box-shadow:0 20px 45px rgba(0,0,0,.22)}
-.hero-bubble{position:absolute;bottom:0;left:0;background:var(--gold);color:#2b2b20;border-radius:18px;padding:12px 16px;font-weight:900;box-shadow:var(--shadow)}
-.features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:22px 0 38px}
-.feature{background:#fff;border:1px solid var(--line);border-radius:16px;padding:15px 18px;display:flex;gap:12px;align-items:center}
-.feature .ico{font-size:1.5rem}
-.feature strong{display:block;font-size:.95rem}
-.feature span{display:block;color:var(--muted);font-size:.8rem}
-.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:38px 0 18px}
-.section-head h2{font-size:clamp(1.8rem,3vw,2.6rem);letter-spacing:-.04em;margin:0}
-.section-head p{margin:5px 0 0;color:var(--muted)}
-.search{width:min(300px,100%);padding:12px 16px;border:1px solid var(--line);background:#fff;border-radius:999px;outline:none}
-.search:focus{border-color:var(--green);box-shadow:0 0 0 3px #174b3618}
-.products{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
-.card{background:#fff;border:1px solid var(--line);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 5px 20px rgba(28,38,30,.035);transition:transform .2s,box-shadow .2s}
-.card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
-.photo{position:relative;aspect-ratio:4/3;background:#f0eee7;overflow:hidden}
-.photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
-.card:hover .photo img{transform:scale(1.035)}
-.badge{position:absolute;top:13px;left:13px;background:var(--red);color:#fff;border-radius:999px;padding:6px 10px;font-size:.72rem;font-weight:900;letter-spacing:.04em}
-.card-body{padding:18px;display:flex;flex-direction:column;gap:10px;flex:1}
-.card h3{font-size:1.15rem;line-height:1.25;margin:0}
-.note{color:var(--muted);font-size:.9rem;margin:0;min-height:2.7em}
-.price-row{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.price{color:var(--red);font-size:1.45rem;font-weight:900;letter-spacing:-.03em}
-.unit{color:var(--muted);font-size:.85rem}
-.card .btn{width:100%;background:var(--green);color:white;margin-top:auto}
-.empty{grid-column:1/-1;text-align:center;padding:30px;color:var(--muted)}
-.order-banner{margin:48px 0;background:#f5e9d7;border:1px solid #ead7bb;border-radius:24px;padding:clamp(22px,4vw,38px);display:flex;justify-content:space-between;align-items:center;gap:20px}
-.order-banner h2{margin:0;font-size:clamp(1.5rem,3vw,2.3rem);letter-spacing:-.04em}
-.order-banner p{margin:7px 0 0;color:var(--muted)}
-.order-banner .btn{background:var(--red);color:#fff;white-space:nowrap}
-footer{background:#153f2d;color:#fff;margin-top:45px;padding:32px 0}
-.footer-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:24px}
-footer p,footer small{color:rgba(255,255,255,.72)}
-footer a{color:#fff}
-.footer-brand{font-size:1.3rem;font-weight:900}
-.copyright{border-top:1px solid rgba(255,255,255,.15);margin-top:24px;padding-top:16px;font-size:.8rem;color:rgba(255,255,255,.6)}
-[dir=rtl] .badge{left:auto;right:13px}
-[dir=rtl] .hero-bubble{left:auto;right:0}
-[dir=rtl] .topline .wrap{direction:rtl}
-[dir=rtl] .brand{direction:rtl}
-@media(max-width:760px){.hero-box{grid-template-columns:1fr;min-height:0;padding:28px}.hero-art{display:none}.features{grid-template-columns:1fr}.section-head{align-items:stretch;flex-direction:column}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card-body{padding:13px}.card h3{font-size:1rem}.price{font-size:1.2rem}.note{font-size:.82rem}.order-banner{align-items:flex-start;flex-direction:column}.footer-grid{grid-template-columns:1fr}}
-@media(max-width:420px){.products{grid-template-columns:1fr}.photo{aspect-ratio:16/10}.brand strong{font-size:1.05rem}}
-</style>
-</head>
-<body>
-<div class="topline"><div class="wrap"><span id="topMsg">Fresh finds and great value in Mirdif</span><span>📍 The Commons, Mirdif, Dubai</span></div></div>
-<header><div class="wrap nav">
-<a class="brand" href="#" aria-label="Coccinelle Supermarket"><img class="brand-logo-img" src="https://dilshanpm104-design.github.io/COCCINELLE/file_00000000f1a881fa89ec7f0cffb0014b.png" alt="Coccinelle Supermarket logo"></a>
-<div class="navright"><a class="btn light" href="https://wa.me/971585060627" id="navOrder">WhatsApp us</a><select class="lang" id="language" aria-label="Language"><option value="en">English</option><option value="ar">العربية</option><option value="fr">Français</option></select></div>
-</div></header>
-<main class="wrap">
-<section class="hero"><div class="hero-box">
-<div><span class="eyebrow" id="eyebrow">Freshness you can taste</span><h1 id="heroTitle">Good food.<br>Great everyday value.</h1><p id="heroText">Discover fresh produce and supermarket favourites at Coccinelle. Browse our latest offers and order conveniently on WhatsApp.</p>
-<div class="hero-actions"><a class="btn gold" href="#offers" id="heroShop">Explore offers ↓</a><a class="btn light" href="https://wa.me/971585060627" id="heroWhats">Order on WhatsApp</a></div></div>
-<div class="hero-art"><img src="https://dilshanpm104-design.github.io/COCCINELLE/file_00000000427481fa806d3e9bb5b4538c.png" alt="Fresh strawberries offer"><div class="hero-bubble" id="heroBubble">Fresh picks, happy days</div></div>
-</div></section>
-<section class="features">
-<div class="feature"><span class="ico">🍃</span><div><strong id="f1">Fresh selection</strong><span id="f1s">Carefully selected produce</span></div></div>
-<div class="feature"><span class="ico">💛</span><div><strong id="f2">Everyday value</strong><span id="f2s">Offers worth discovering</span></div></div>
-<div class="feature"><span class="ico">📲</span><div><strong id="f3">Easy WhatsApp orders</strong><span id="f3s">Order directly with our team</span></div></div>
-</section>
-<section id="offers">
-<div class="section-head"><div><h2 id="offersTitle">Our latest offers</h2><p id="offersSub">Fresh deals, selected for you.</p></div><input class="search" id="search" type="search" placeholder="Search products…" aria-label="Search products"></div>
-<div class="products" id="products"><p class="empty">Loading offers…</p></div>
-</section>
-<section class="order-banner"><div><h2 id="orderTitle">Need help with your order?</h2><p id="orderSub">Message our team on WhatsApp and we’ll be happy to help.</p></div><a class="btn" href="https://wa.me/971585060627" id="orderBtn">Chat with us on WhatsApp ↗</a></section>
-</main>
-<footer><div class="wrap"><div class="footer-grid"><div><div class="footer-brand">Coccinelle Supermarket</div><p id="footerDesc">Freshness, quality and everyday value in Mirdif.</p></div><div><strong id="visit">Visit us</strong><p>The Commons, Mirdif<br>Dubai, United Arab Emirates</p></div><div><strong id="contact">Contact & orders</strong><p><a href="https://wa.me/971585060627">+971 58 506 0627 · WhatsApp</a></p></div></div><div class="copyright">© <span id="year"></span> Coccinelle Supermarket. <span id="rights">All rights reserved.</span></div></div></footer>
+header{position:sticky;top:0;z-index:20;background:#fff;display:flex;align-items:center;gap:10px;padding:8px 12px;box-shadow:0 2px 10px #0001}
+header img{height:36px}
+#q{flex:1;min-width:0;padding:10px 14px;border:1px solid #e2d8d2;border-radius:22px;font-size:15px}
+.cb{position:relative;border:0;background:var(--r);color:#fff;border-radius:50%;width:42px;height:42px;font-size:19px;cursor:pointer}
+.cb i{position:absolute;top:-4px;right:-4px;background:var(--k);font:700 11px system-ui;border-radius:10px;padding:2px 6px}
+.bump{animation:bump .4s}@keyframes bump{40%{transform:scale(1.3) rotate(-8deg)}}
+nav{display:flex;gap:6px;overflow-x:auto;padding:8px 12px;background:var(--k);scrollbar-width:none}
+nav a{color:#fff;text-decoration:none;font-size:13px;white-space:nowrap;padding:6px 13px;border-radius:16px}
+nav a.on{background:var(--r)}
+main{max-width:1100px;margin:0 auto;padding:0 12px 30px}
+section{margin:26px 0}
+.hero{margin:12px 0;border-radius:22px;background:linear-gradient(120deg,#fff3ec,#ffd3c9);padding:28px 22px;display:grid;gap:14px}
+.hero h1{font-size:clamp(32px,8vw,56px);line-height:1.05;max-width:11em}
+.hero p{max-width:28em;color:var(--g)}
+.fl{display:flex;gap:14px;font-size:44px}
+.fl span{animation:fl 3s ease-in-out infinite}.fl span:nth-child(2){animation-delay:.5s}.fl span:nth-child(3){animation-delay:1s}.fl span:nth-child(4){animation-delay:1.5s}
+@keyframes fl{50%{transform:translateY(-12px) rotate(7deg)}}
+.btn{display:inline-block;background:var(--r);color:#fff;border:0;border-radius:10px;padding:11px 22px;font-weight:700;text-decoration:none;font-size:15px;cursor:pointer;transition:transform .2s,background .2s}
+.btn:hover{background:var(--rd);transform:translateY(-2px)}.btn.k{background:var(--k)}
+.tr{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:14px 0}
+.tr div{background:var(--c);border-radius:14px;padding:12px;font-size:22px;display:grid;gap:2px}
+.tr b{font-size:14px}.tr small{font-size:12px;color:var(--g)}
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.ct{background:var(--c);border-radius:16px;padding:16px 8px;text-align:center;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.ct:hover{transform:translateY(-4px);box-shadow:0 8px 18px #d9202f22}
+.ct b{font-size:36px;display:block}.ct span{font-weight:600;font-size:14px}
+.bn{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:26px 0}
+.bn a{border-radius:18px;padding:24px;color:#fff;text-decoration:none;display:grid;gap:6px;transition:transform .2s}
+.bn a:hover{transform:scale(1.02)}.b1{background:var(--r)}.b2{background:var(--k)}
+.bn h3{font-size:26px}
+.sh{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.sh h2{font-size:24px}.sh a{color:var(--r);font-weight:600;font-size:14px}
+.pg{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.pc{border:1px solid #eee;border-radius:14px;padding:10px;display:grid;gap:5px;text-align:center;background:#fff;transition:box-shadow .2s}
+.pc:hover{box-shadow:0 6px 16px #0001}
+.im{position:relative;height:110px;display:grid;place-items:center;font-size:64px;background:var(--c);border-radius:10px;overflow:hidden}
+.im img{width:100%;height:100%;object-fit:cover}
+.tag{position:absolute;top:6px;left:6px;background:var(--r);color:#fff;font:700 11px system-ui;padding:3px 7px;border-radius:8px;animation:pl 2s infinite}
+@keyframes pl{50%{transform:scale(1.12)}}
+.pc h4{font-size:14px;min-height:36px}.pr{font-weight:700}.pr small{font-weight:400;color:var(--g)}.pr s{display:block;font-weight:400;color:var(--g);font-size:12px}
+.pc .btn{padding:8px}
+.tx{max-width:640px;display:grid;gap:12px;line-height:1.55}
+.lk{display:flex;gap:14px;flex-wrap:wrap}.lk a{color:var(--r);font-weight:600}
+.em{color:var(--g)}
+.rv{opacity:0;transform:translateY(18px);transition:opacity .5s,transform .5s}.rv.in{opacity:1;transform:none}
+footer{background:var(--k);color:#fff;padding:24px 14px;text-align:center;display:grid;gap:8px;font-size:14px}
+footer img{height:44px;margin:auto;background:#fff;border-radius:8px;padding:4px}
+#dr{position:fixed;inset:0;background:#0007;display:none;z-index:50}#dr.o{display:block}
+#sh{position:absolute;bottom:0;left:0;right:0;max-width:520px;margin:auto;max-height:90vh;overflow:auto;background:#fff;border-radius:20px 20px 0 0;padding:16px;display:grid;gap:10px;animation:up .3s}
+@keyframes up{from{transform:translateY(100%)}}
+.ci{display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #eee;padding-bottom:8px}
+.ci small{display:block;color:var(--g)}.q{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.q button{width:30px;height:30px;border-radius:50%;border:1px solid #ddd;background:#fff;font-size:16px}
+.tt{font-weight:700;font-size:18px}
+.fm{display:grid;gap:8px}.fm label{display:inline-flex;gap:6px;margin-right:12px}
+#dd{display:grid;gap:8px}#dd input{padding:11px;border:1px solid #ddd;border-radius:10px;font-size:15px}
+.x{background:none;border:0;color:var(--g);padding:8px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}}
+</style></head><body>
+<header><a href="#home"><img src="https://dilshanpm104-design.github.io/COCCINELLE/file_00000000f1a881fa89ec7f0cffb0014b.png" alt="Coccinelle Supermarket"></a><input id="q" type="search" placeholder="Search products" oninput="srch()"><button class="cb" onclick="drawer()" aria-label="Basket">🛒<i id="cn">0</i></button></header>
+<nav></nav>
+<main id="app"><p class="em" style="padding:30px 0">Loading…</p></main>
+<footer><img src="https://dilshanpm104-design.github.io/COCCINELLE/file_00000000f1a881fa89ec7f0cffb0014b.png" alt="Coccinelle"><div id="ft"></div><div>Orders are confirmed on WhatsApp. No online payment.</div></footer>
+<div id="dr" onclick="if(event.target==this)this.classList.remove('o')"><div id="sh"></div></div>
 <script>
-const I18N={
-en:{top:"Fresh finds and great value in Mirdif",eyebrow:"Freshness you can taste",heroTitle:"Good food.<br>Great everyday value.",heroText:"Discover fresh produce and supermarket favourites at Coccinelle. Browse our latest offers and order conveniently on WhatsApp.",shop:"Explore offers ↓",whats:"Order on WhatsApp",bubble:"Fresh picks, happy days",f1:"Fresh selection",f1s:"Carefully selected produce",f2:"Everyday value",f2s:"Offers worth discovering",f3:"Easy WhatsApp orders",f3s:"Order directly with our team",offers:"Our latest offers",sub:"Fresh deals, selected for you.",search:"Search products…",orderTitle:"Need help with your order?",orderSub:"Message our team on WhatsApp and we’ll be happy to help.",orderBtn:"Chat with us on WhatsApp ↗",visit:"Visit us",contact:"Contact & orders",footer:"Freshness, quality and everyday value in Mirdif.",rights:"All rights reserved.",order:"Order on WhatsApp",per:"per pack",each:"each",loading:"Loading offers…",fail:"Could not load offers. Please refresh the page.",no:"No products match your search.",from:"From "},
-ar:{top:"منتجات طازجة وقيمة رائعة في مردف",eyebrow:"طازجة يمكنك تذوقها",heroTitle:"طعام طازج.<br>قيمة رائعة كل يوم.",heroText:"اكتشف المنتجات الطازجة والمفضلة في سوبرماركت كوكينيل. تصفح عروضنا واطلب بسهولة عبر واتساب.",shop:"اكتشف العروض ↓",whats:"اطلب عبر واتساب",bubble:"اختيارات طازجة وأيام سعيدة",f1:"منتجات طازجة",f1s:"منتجات مختارة بعناية",f2:"قيمة يومية",f2s:"عروض تستحق اكتشافها",f3:"طلب سهل عبر واتساب",f3s:"اطلب مباشرة من فريقنا",offers:"أحدث عروضنا",sub:"عروض طازجة مختارة لك.",search:"ابحث عن المنتجات…",orderTitle:"هل تحتاج مساعدة في طلبك؟",orderSub:"راسل فريقنا عبر واتساب وسيسعدنا مساعدتك.",orderBtn:"تواصل معنا عبر واتساب ↗",visit:"زورونا",contact:"التواصل والطلبات",footer:"الطازجة والجودة والقيمة اليومية في مردف.",rights:"جميع الحقوق محفوظة.",order:"اطلب عبر واتساب",per:"للحزمة",each:"للحبة",loading:"جارٍ تحميل العروض…",fail:"تعذر تحميل العروض. يرجى تحديث الصفحة.",no:"لا توجد منتجات مطابقة للبحث.",from:"ابتداءً من "},
-fr:{top:"Fraîcheur et petits prix à Mirdif",eyebrow:"La fraîcheur à chaque bouchée",heroTitle:"Du bon goût.<br>De belles offres chaque jour.",heroText:"Découvrez les produits frais et les essentiels chez Coccinelle. Consultez nos offres et commandez facilement sur WhatsApp.",shop:"Voir les offres ↓",whats:"Commander sur WhatsApp",bubble:"Fraîcheur et bonne humeur",f1:"Sélection fraîche",f1s:"Des produits soigneusement choisis",f2:"Prix avantageux",f2s:"Des offres à découvrir",f3:"Commande WhatsApp facile",f3s:"Commandez directement auprès de notre équipe",offers:"Nos offres du moment",sub:"Des offres fraîches, sélectionnées pour vous.",search:"Rechercher un produit…",orderTitle:"Besoin d’aide pour votre commande ?",orderSub:"Écrivez-nous sur WhatsApp, nous serons ravis de vous aider.",orderBtn:"Contactez-nous sur WhatsApp ↗",visit:"Nous rendre visite",contact:"Contact et commandes",footer:"Fraîcheur, qualité et bons prix à Mirdif.",rights:"Tous droits réservés.",order:"Commander sur WhatsApp",per:"par paquet",each:"à l’unité",loading:"Chargement des offres…",fail:"Impossible de charger les offres. Actualisez la page.",no:"Aucun produit ne correspond à votre recherche.",from:"À partir de "}};
-let lang="en",deals=[];
-const $=id=>document.getElementById(id);
-function applyLang(){const t=I18N[lang];document.documentElement.lang=lang;document.documentElement.dir=lang==="ar"?"rtl":"ltr";
-["topMsg","eyebrow","heroText","heroShop","heroWhats","heroBubble","f1","f1s","f2","f2s","f3","f3s","offersTitle","offersSub","orderTitle","orderSub","orderBtn","visit","contact","footerDesc","rights"].forEach((id,i)=>{});
-$("topMsg").textContent=t.top;$("eyebrow").textContent=t.eyebrow;$("heroTitle").innerHTML=t.heroTitle;$("heroText").textContent=t.heroText;$("heroShop").textContent=t.shop;$("heroWhats").textContent=t.whats;$("heroBubble").textContent=t.bubble;
-["f1","f1s","f2","f2s","f3","f3s","offersTitle","offersSub","orderTitle","orderSub","orderBtn","visit","contact","footerDesc","rights"].forEach(id=>{const map={f1:"f1",f1s:"f1s",f2:"f2",f2s:"f2s",f3:"f3",f3s:"f3s",offersTitle:"offers",offersSub:"sub",orderTitle:"orderTitle",orderSub:"orderSub",orderBtn:"orderBtn",visit:"visit",contact:"contact",footerDesc:"footer",rights:"rights"};$ (id).textContent=t[map[id]]});
-$("search").placeholder=t.search;render();}
-function productName(p){if(lang==="ar"&&p.name_ar)return p.name_ar;if(lang==="fr"&&p.name_fr)return p.name_fr;return p.name;}
-function render(){const root=$("products");root.replaceChildren();const q=$("search").value.toLowerCase();const items=(deals.offers||[]).filter(p=>productName(p).toLowerCase().includes(q)||(p.note||"").toLowerCase().includes(q));if(!items.length){root.innerHTML='<p class="empty">'+I18N[lang].no+'</p>';return}
-items.forEach((p,i)=>{const c=document.createElement("article");c.className="card";const photo=document.createElement("div");photo.className="photo";const img=document.createElement("img");img.src=p.image||"";img.alt=productName(p);img.loading="lazy";img.onerror=()=>{photo.style.background="#e9eee9";img.style.display="none";};photo.append(img);const badge=document.createElement("span");badge.className="badge";badge.textContent=lang==="ar"?"عرض خاص":lang==="fr"?"OFFRE":"SPECIAL OFFER";photo.append(badge);c.append(photo);const body=document.createElement("div");body.className="card-body";const h=document.createElement("h3");h.textContent=productName(p);body.append(h);const pr=document.createElement("div");pr.className="price-row";const price=document.createElement("span");price.className="price";price.textContent=p.priceRange||(p.name.includes("Pomegranate")?(lang==="ar"?"5–7 درهم":lang==="fr"?"5–7 AED":"AED 5–7"):"AED "+Number(p.price).toFixed(2));pr.append(price);if(p.unit){const u=document.createElement("span");u.className="unit";u.textContent=p.unit==="each"?I18N[lang].each:p.unit==="per pack"?I18N[lang].per:p.unit;pr.append(u)}body.append(pr);if(p.note){const note=document.createElement("p");note.className="note";note.textContent=p.note;body.append(note)}const btn=document.createElement("a");btn.className="btn";btn.href="https://wa.me/"+String(deals.store.whatsapp||"971585060627").replace(/\D/g,"")+"?text="+encodeURIComponent((lang==="ar"?"مرحباً، أريد طلب: ":lang==="fr"?"Bonjour, je souhaite commander : ":"Hello, I would like to order: ")+productName(p)+" — AED "+(p.priceRange||p.price)+(p.unit?" / "+p.unit:""));btn.target="_blank";btn.rel="noopener";btn.textContent=I18N[lang].order;body.append(btn);c.append(body);root.append(c);});}
-$("language").addEventListener("change",e=>{lang=e.target.value;applyLang()});$("search").addEventListener("input",render);$("year").textContent=new Date().getFullYear();
-fetch("deals.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error();return r.json()}).then(d=>{deals=d;render()}).catch(()=>{$("products").innerHTML='<p class="empty">'+I18N[lang].fail+'</p>'});
-</script>
-</body>
-</html>
+const $=s=>document.querySelector(s),E=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt()+';'),M=n=>'AED '+Number(n).toFixed(2);
+let D,cart={};try{cart=JSON.parse(localStorage.cc||'{}')}catch(e){}
+const sv=()=>{try{localStorage.cc=JSON.stringify(cart)}catch(e){}},P=id=>D.p.find(p=>p.id==id),st=p=>p.u=='kg'?.5:1;
+const of=()=>D.p.filter(p=>p.old>p.pr);
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.1});
+const card=p=>`<div class="pc rv"><div class="im">${p.img?`<img loading="lazy" src="${E(p.img)}" alt="${E(p.n)}">`:p.e||'🛒'}${p.old>p.pr?`<b class="tag">-${Math.round(100-p.pr/p.old*100)}%</b>`:''}</div><h4>${E(p.n)}</h4><div class="pr">${M(p.pr)}<small> / ${E(p.u)}</small>${p.old>p.pr?`<s>${M(p.old)}</s>`:''}</div><button class="btn" onclick="add('${p.id}')">Add</button></div>`;
+const grid=l=>l.length?`<div class="pg">${l.map(card).join('')}</div>`:'<p class="em">Nothing here yet. Check back soon.</p>';
+const sec=(t,b,l)=>`<section><div class="sh"><h2>${t}</h2>${l?`<a href="${l}">View all</a>`:''}</div>${b}</section>`;
+function home(){return `<div class="hero"><h1>Fresh groceries, better living.</h1><p>Fresh food and everyday essentials from The Commons, Mirdif. Order on WhatsApp. ${E(D.cfg.free)}.</p><div><a class="btn" href="#cat/${D.cats[0].id}">Shop now</a></div><div class="fl"><span>🍅</span><span>🥖</span><span>🥛</span><span>🍎</span></div></div>
+<div class="tr"><div>🚚<b>Free delivery</b><small>about 2.5 km from the store</small></div><div>🥬<b>Fresh every day</b><small>fruit, veg and bakery</small></div><div>💬<b>Order on WhatsApp</b><small>no online payment</small></div><div>🕖<b>${E(D.cfg.hours)}</b><small>open daily</small></div></div>
+<section><div class="cg">${D.cats.map(c=>`<a class="ct rv" href="#cat/${c.id}"><b>${c.e}</b><span>${E(c.n)}</span></a>`).join('')}</div></section>
+<div class="bn"><a class="b1 rv" href="#offers"><h3>Weekly offers</h3><span>Save on everyday items</span></a><a class="b2 rv" href="#deals"><h3>Deal of the day</h3><span id="cd"></span></a></div>
+${sec('Offers this week',grid(of().slice(0,6)),'#offers')}${sec('New arrivals',grid(D.p.slice(-6)),'#new')}`}
+const about=()=>`<section class="tx"><h2>About Coccinelle</h2><p>Coccinelle Supermarket is a neighbourhood market at The Commons, Mirdif. Fresh food and everyday essentials are under one roof: vegetables, butchery, seafood, bakery, beverages, household, and health and beauty.</p><p>Coccinelle is part of a network of about 800 stores, from supermarkets to convenience stores. Its own brands cover nearly 2,000 everyday products at good value, and the Cocci loyalty card rewards regular shoppers in store.</p><p>Live nearby? Order on WhatsApp. ${E(D.cfg.free)}.</p><p><a class="btn" href="${E(D.cfg.web)}" target="_blank" rel="noopener">Visit coccinelle.ae</a></p></section>`;
+const contact=()=>`<section class="tx"><h2>Visit or contact us</h2><p>📍 ${E(D.cfg.addr)}</p><p>🕖 Open ${E(D.cfg.hours)}</p><p>📞 <a href="tel:+97143499605">+971 4 349 9605</a></p><p><a class="btn" href="https://wa.me/${E(D.cfg.wa)}" target="_blank" rel="noopener">Chat on WhatsApp</a> <a class="btn k" href="${E(D.cfg.map)}" target="_blank" rel="noopener">Open in Maps</a></p><div class="lk"><a href="${E(D.cfg.ig)}" target="_blank" rel="noopener">Instagram</a><a href="${E(D.cfg.fb)}" target="_blank" rel="noopener">Facebook</a><a href="${E(D.cfg.cat)}" target="_blank" rel="noopener">WhatsApp catalogue</a></div></section>`;
+function route(){if(!D)return;$('#q').value='';const h=decodeURIComponent(location.hash.slice(1)||'home').split('/'),a=h[0],c=D.cats.find(x=>x.id==h[1]);
+const pages={home,about,contact,offers:()=>sec('Offers this week',grid(of())),deals:()=>sec('Deal of the day',grid(D.p.filter(p=>p.deal)))+sec('All discounted items',grid(of())),new:()=>sec('New arrivals',grid(D.p.slice(-12).reverse())),cat:()=>c?sec(c.e+' '+E(c.n),grid(D.p.filter(p=>p.c==c.id))):home()};
+$('#app').innerHTML=(pages[a]||home)();
+const cur='#'+(a=='cat'?'cat/'+h[1]:a);document.querySelectorAll('nav a').forEach(x=>x.classList.toggle('on',x.getAttribute('href')==cur));
+scrollTo(0,0);document.querySelectorAll('.rv').forEach(e=>io.observe(e));tick()}
+function srch(){const v=$('#q').value.trim().toLowerCase();if(v.length<2)return route();$('#app').innerHTML=sec('Results for "'+E(v)+'"',grid(D.p.filter(p=>p.n.toLowerCase().includes(v))));document.querySelectorAll('.rv').forEach(e=>io.observe(e))}
+function tick(){const e=$('#cd');if(!e)return;const n=new Date(),m=new Date(n);m.setHours(24,0,0,0);const s=Math.floor((m-n)/1e3),f=x=>String(x).padStart(2,'0');e.textContent=`Ends in ${f(s/3600|0)}:${f(s%3600/60|0)}:${f(s%60)}`}
+setInterval(tick,1000);
+function add(id){cart[id]=+((cart[id]||0)+st(P(id))).toFixed(1);sv();upd();const b=$('.cb');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump')}
+function chg(id,d){cart[id]=Math.max(0,+((cart[id]||0)+d*st(P(id))).toFixed(1));if(!cart[id])delete cart[id];sv();upd();drawer()}
+const items=()=>Object.keys(cart).map(P).filter(Boolean),tot=()=>items().reduce((s,p)=>s+p.pr*cart[p.id],0),upd=()=>{$('#cn').textContent=items().length};
+function tg(){const p=document.querySelector('input[value=Pickup]').checked;$('#dd').style.display=p?'none':'grid'}
+function drawer(){const l=items(),f=['nm','ph','lc'],s=f.map(i=>($('#'+i)||{}).value||''),pk=document.querySelector('input[value=Pickup]'),was=pk&&pk.checked;
+$('#sh').innerHTML='<h3>Your order</h3>'+(l.length?l.map(p=>`<div class="ci"><span>${p.e||''} ${E(p.n)}<small>${M(p.pr)} / ${E(p.u)}</small></span><span class="q"><button onclick="chg('${p.id}',-1)">−</button>${cart[p.id]} ${E(p.u)}<button onclick="chg('${p.id}',1)">+</button></span></div>`).join('')+`<p class="tt">Total ${M(tot())}</p><div class="fm"><div><label><input type="radio" name="t" value="Delivery" checked onchange="tg()"> Delivery</label><label><input type="radio" name="t" value="Pickup" onchange="tg()"> Pickup</label></div><div id="dd"><input id="nm" placeholder="Your name"><input id="ph" type="tel" placeholder="Your WhatsApp number"><input id="lc" placeholder="Building, area, location"></div></div><button class="btn" onclick="send()">Send order on WhatsApp</button>`:'<p class="em">Your basket is empty.</p>')+`<button class="x" onclick="$('#dr').classList.remove('o')">Close</button>`;
+if(l.length){f.forEach((i,k)=>$('#'+i).value=s[k]);if(was){document.querySelector('input[value=Pickup]').checked=true;tg()}}$('#dr').classList.add('o')}
+function send(){const t=document.querySelector('input[name=t]:checked').value,n=$('#nm').value.trim(),ph=$('#ph').value.trim(),lc=$('#lc').value.trim();
+if(t=='Delivery'&&!(n&&ph&&lc))return alert('Please enter your name, WhatsApp number and location.');
+const m='Hello Coccinelle, I would like to order:\n'+items().map(p=>`- ${p.n}: ${cart[p.id]} ${p.u} = ${M(p.pr*cart[p.id])}`).join('\n')+`\nTotal: ${M(tot())}\nOrder type: ${t}`+(t=='Delivery'?`\nName: ${n}\nPhone: ${ph}\nLocation: ${lc}`:'');
+open('https://wa.me/'+D.cfg.wa+'?text='+encodeURIComponent(m),'_blank')}
+const FB={apiKey:"AIzaSyDg7DfIV3f1pA5qV_VGgvoQV24Y2QvWiK8",authDomain:"coccinelle-supermarket.firebaseapp.com",projectId:"coccinelle-supermarket",storageBucket:"coccinelle-supermarket.firebasestorage.app",messagingSenderId:"227874611552",appId:"1:227874611552:web:b30f8ab364ff89e4cffe05"};
+async function live(){try{const u='https://www.gstatic.com/firebasejs/10.12.2/',[a,f]=await Promise.all([import(u+'firebase-app.js'),import(u+'firebase-firestore.js')]);const db=f.getFirestore(a.initializeApp(FB)),s=await f.getDocs(f.collection(db,'products'));
+return s.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.available!==false&&p.name).map(p=>{const c=p.createdAt||{};return{id:p.id,c:p.category,n:p.name,u:p.unit||'pc',pr:+p.price||0,old:+p.oldPrice||0,e:p.emoji,img:p.imageUrl||p.imageData||'',deal:p.deal?1:0,t:(c.seconds||0)*1e3+(c.nanoseconds||0)/1e6}}).sort((x,y)=>x.t-y.t)}catch(e){return[]}}
+fetch('products.json?'+Date.now()).then(r=>r.json()).then(async d=>{D=d;const l=await live();if(l.length)D.p=l;
+$('nav').innerHTML=[['home','Home'],...D.cats.map(c=>['cat/'+c.id,c.e+' '+c.n]),['offers','Offers'],['deals','Deals'],['about','About'],['contact','Contact']].map(([h,t])=>`<a href="#${h}">${E(t)}</a>`).join('');
+$('#ft').innerHTML=`${E(D.cfg.addr)} · ${E(D.cfg.hours)}<br><a href="${E(D.cfg.ig)}">Instagram</a> · <a href="${E(D.cfg.fb)}">Facebook</a> · <a href="https://wa.me/${E(D.cfg.wa)}">WhatsApp</a>`;
+upd();route()}).catch(()=>{$('#app').innerHTML='<p class="em" style="padding:30px 0">Could not load products. Please refresh.</p>'});
+addEventListener('hashchange',route);
+</script></body></html>
