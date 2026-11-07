@@ -1,63 +1,451 @@
-{"cfg":{"wa":"97143499605","free":"Free delivery within about 2.5 km","hours":"7:00 AM to 12:00 AM","addr":"The Commons, Ground Floor, Mirdif, Dubai","map":"https://maps.app.goo.gl/AxJbmynV3RGL8YZ57","fb":"https://www.facebook.com/profile.php?id=61595464765070","ig":"https://www.instagram.com/coccinelledxb/","web":"http://www.coccinelle.ae/","cat":"https://wa.me/c/97143499605"},
-"cats":[
-{"id":"fruits-veg","n":"Fruits & Vegetables","e":"🥬"},
-{"id":"meat-fish","n":"Meat & Fish","e":"🥩"},
-{"id":"dairy-eggs","n":"Dairy & Eggs","e":"🥛"},
-{"id":"bakery","n":"Bakery","e":"🥖"},
-{"id":"grocery","n":"Grocery & Pantry","e":"🍚"},
-{"id":"beverages","n":"Beverages","e":"🧃"},
-{"id":"snacks","n":"Snacks & Sweets","e":"🍫"},
-{"id":"frozen","n":"Frozen Food","e":"🧊"},
-{"id":"household","n":"Household","e":"🧹"},
-{"id":"personal-care","n":"Health & Beauty","e":"🧴"}],
-"p":[
-{"id":"f1","c":"fruits-veg","n":"Banana","u":"kg","pr":4.5,"e":"🍌"},
-{"id":"f2","c":"fruits-veg","n":"Red Apple","u":"kg","pr":7.95,"old":9.95,"e":"🍎"},
-{"id":"f3","c":"fruits-veg","n":"Tomato","u":"kg","pr":3.95,"e":"🍅"},
-{"id":"f4","c":"fruits-veg","n":"Potato","u":"kg","pr":2.95,"e":"🥔"},
-{"id":"f5","c":"fruits-veg","n":"Onion","u":"kg","pr":2.5,"e":"🧅"},
-{"id":"m1","c":"meat-fish","n":"Whole Chicken","u":"kg","pr":14.5,"e":"🍗"},
-{"id":"m2","c":"meat-fish","n":"Beef Mince","u":"kg","pr":38,"e":"🥩"},
-{"id":"m3","c":"meat-fish","n":"Lamb Chops","u":"kg","pr":52,"e":"🍖"},
-{"id":"m4","c":"meat-fish","n":"Salmon Fillet","u":"kg","pr":69,"old":79,"e":"🐟"},
-{"id":"m5","c":"meat-fish","n":"Shrimp","u":"kg","pr":55,"e":"🦐"},
-{"id":"d1","c":"dairy-eggs","n":"Fresh Milk 1L","u":"pc","pr":6.5,"e":"🥛"},
-{"id":"d2","c":"dairy-eggs","n":"Eggs (12)","u":"pack","pr":11,"e":"🥚"},
-{"id":"d3","c":"dairy-eggs","n":"Cheddar Cheese 200g","u":"pack","pr":9.5,"e":"🧀"},
-{"id":"d4","c":"dairy-eggs","n":"Yogurt 500g","u":"pc","pr":5.5,"e":"🥣"},
-{"id":"d5","c":"dairy-eggs","n":"Butter 200g","u":"pc","pr":9,"e":"🧈"},
-{"id":"b1","c":"bakery","n":"Whole Wheat Bread","u":"pc","pr":4.5,"e":"🍞"},
-{"id":"b2","c":"bakery","n":"Baguette","u":"pc","pr":3,"e":"🥖"},
-{"id":"b3","c":"bakery","n":"Croissant","u":"pc","pr":3.5,"e":"🥐"},
-{"id":"b4","c":"bakery","n":"Chocolate Cake","u":"pc","pr":18,"old":22,"e":"🍰"},
-{"id":"b5","c":"bakery","n":"Muffin","u":"pc","pr":4,"e":"🧁"},
-{"id":"g1","c":"grocery","n":"Basmati Rice 5kg","u":"pack","pr":32,"e":"🍚","deal":1,"old":38},
-{"id":"g2","c":"grocery","n":"Toor Dal","u":"kg","pr":9.5,"e":"🫘"},
-{"id":"g3","c":"grocery","n":"Olive Oil 500ml","u":"pc","pr":29,"e":"🫒"},
-{"id":"g4","c":"grocery","n":"Sugar 2kg","u":"pack","pr":8.5,"e":"🍬"},
-{"id":"g5","c":"grocery","n":"Wheat Flour 5kg","u":"pack","pr":18,"e":"🌾"},
-{"id":"v1","c":"beverages","n":"Orange Juice 1L","u":"pc","pr":8.5,"e":"🧃"},
-{"id":"v2","c":"beverages","n":"Water 12 x 500ml","u":"pack","pr":9,"e":"💧"},
-{"id":"v3","c":"beverages","n":"Cola 6 cans","u":"pack","pr":12,"e":"🥤"},
-{"id":"v4","c":"beverages","n":"Tea Bags 100","u":"pack","pr":14,"e":"🍵"},
-{"id":"v5","c":"beverages","n":"Ground Coffee 200g","u":"pack","pr":22,"e":"☕"},
-{"id":"s1","c":"snacks","n":"Potato Chips","u":"pack","pr":6,"e":"🍟"},
-{"id":"s2","c":"snacks","n":"Chocolate Bar","u":"pc","pr":5,"e":"🍫"},
-{"id":"s3","c":"snacks","n":"Biscuits","u":"pack","pr":4,"e":"🍪"},
-{"id":"s4","c":"snacks","n":"Mixed Nuts","u":"kg","pr":72,"e":"🥜"},
-{"id":"s5","c":"snacks","n":"Popcorn","u":"pack","pr":5,"e":"🍿"},
-{"id":"z1","c":"frozen","n":"Frozen Peas 1kg","u":"pack","pr":9,"e":"🟢"},
-{"id":"z2","c":"frozen","n":"Ice Cream 1L","u":"pc","pr":16,"e":"🍨"},
-{"id":"z3","c":"frozen","n":"Fish Fingers","u":"pack","pr":15,"e":"🐟"},
-{"id":"z4","c":"frozen","n":"French Fries 1kg","u":"pack","pr":12,"e":"🍟"},
-{"id":"z5","c":"frozen","n":"Chicken Nuggets","u":"pack","pr":17,"e":"🍗"},
-{"id":"h1","c":"household","n":"Dish Soap 750ml","u":"pc","pr":7,"e":"🧴"},
-{"id":"h2","c":"household","n":"Laundry Detergent 3kg","u":"pack","pr":35,"e":"🧺"},
-{"id":"h3","c":"household","n":"Tissue Box","u":"pack","pr":3,"e":"🧻"},
-{"id":"h4","c":"household","n":"Garbage Bags 30","u":"pack","pr":8,"e":"🗑️"},
-{"id":"h5","c":"household","n":"Floor Cleaner 1L","u":"pc","pr":12,"e":"🧹"},
-{"id":"c1","c":"personal-care","n":"Shampoo 400ml","u":"pc","pr":16,"e":"🧴"},
-{"id":"c2","c":"personal-care","n":"Toothpaste","u":"pc","pr":7,"e":"🪥"},
-{"id":"c3","c":"personal-care","n":"Soap 4 pcs","u":"pack","pr":9,"e":"🧼"},
-{"id":"c4","c":"personal-care","n":"Deodorant 150ml","u":"pc","pr":13,"e":"🧴"},
-{"id":"c5","c":"personal-care","n":"Hand Wash 500ml","u":"pc","pr":8,"e":"🫧"}]}
+{
+ "cfg": {
+  "wa": "971585060627",
+  "free": "Free delivery within about 2.5 km",
+  "hours": "7:00 AM to 12:00 AM",
+  "addr": "The Commons, Ground Floor, Mirdif, Dubai",
+  "map": "https://maps.app.goo.gl/AxJbmynV3RGL8YZ57",
+  "fb": "https://www.facebook.com/profile.php?id=61595464765070",
+  "ig": "https://www.instagram.com/coccinelledxb/",
+  "web": "http://www.coccinelle.ae/",
+  "cat": "https://wa.me/c/97143499605",
+  "phone": "+97143499605",
+  "phoneLabel": "+971 4 349 9605",
+  "site": "https://dilshanpm104-design.github.io/COCCINELLE/"
+ },
+ "cats": [
+  {
+   "id": "fruits",
+   "n": "Fresh Fruits",
+   "img": "images/cat/fruits.jpg"
+  },
+  {
+   "id": "vegetables",
+   "n": "Fresh Vegetables",
+   "img": "images/cat/vegetables.jpg"
+  },
+  {
+   "id": "meat-poultry",
+   "n": "Meat & Poultry",
+   "img": "images/cat/meat-poultry.jpg"
+  },
+  {
+   "id": "seafood",
+   "n": "Seafood",
+   "img": "images/cat/seafood.jpg"
+  },
+  {
+   "id": "bakery",
+   "n": "Bakery",
+   "img": "images/cat/bakery.jpg"
+  },
+  {
+   "id": "dairy-eggs",
+   "n": "Dairy & Eggs",
+   "img": "images/cat/dairy-eggs.jpg"
+  },
+  {
+   "id": "grocery",
+   "n": "Grocery & Pantry",
+   "img": "images/cat/grocery.jpg"
+  },
+  {
+   "id": "beverages",
+   "n": "Beverages",
+   "img": "images/cat/beverages.jpg"
+  },
+  {
+   "id": "snacks",
+   "n": "Snacks & Sweets",
+   "img": "images/cat/snacks.jpg"
+  },
+  {
+   "id": "frozen",
+   "n": "Frozen Foods",
+   "img": "images/cat/frozen.jpg"
+  },
+  {
+   "id": "household",
+   "n": "Household Essentials",
+   "img": "images/cat/household.jpg"
+  },
+  {
+   "id": "personal-care",
+   "n": "Personal Care",
+   "img": "images/cat/personal-care.jpg"
+  }
+ ],
+ "p": [
+  {
+   "id": "f1",
+   "c": "fruits",
+   "n": "Banana",
+   "u": "kg",
+   "pr": 4.5,
+   "best": 1
+  },
+  {
+   "id": "f2",
+   "c": "fruits",
+   "n": "Red Apple",
+   "u": "kg",
+   "pr": 7.95,
+   "old": 9.95,
+   "feat": 1
+  },
+  {
+   "id": "f3",
+   "c": "vegetables",
+   "n": "Tomato",
+   "u": "kg",
+   "pr": 3.95
+  },
+  {
+   "id": "f4",
+   "c": "vegetables",
+   "n": "Potato",
+   "u": "kg",
+   "pr": 2.95
+  },
+  {
+   "id": "f5",
+   "c": "vegetables",
+   "n": "Onion",
+   "u": "kg",
+   "pr": 2.5
+  },
+  {
+   "id": "m1",
+   "c": "meat-poultry",
+   "n": "Whole Chicken",
+   "u": "kg",
+   "pr": 14.5,
+   "feat": 1
+  },
+  {
+   "id": "m2",
+   "c": "meat-poultry",
+   "n": "Beef Mince",
+   "u": "kg",
+   "pr": 38
+  },
+  {
+   "id": "m3",
+   "c": "meat-poultry",
+   "n": "Lamb Chops",
+   "u": "kg",
+   "pr": 52
+  },
+  {
+   "id": "m4",
+   "c": "seafood",
+   "n": "Salmon Fillet",
+   "u": "kg",
+   "pr": 69,
+   "old": 79
+  },
+  {
+   "id": "m5",
+   "c": "seafood",
+   "n": "Shrimp",
+   "u": "kg",
+   "pr": 55
+  },
+  {
+   "id": "d1",
+   "c": "dairy-eggs",
+   "n": "Fresh Milk 1L",
+   "u": "pc",
+   "pr": 6.5,
+   "best": 1
+  },
+  {
+   "id": "d2",
+   "c": "dairy-eggs",
+   "n": "Eggs (12)",
+   "u": "pack",
+   "pr": 11,
+   "feat": 1
+  },
+  {
+   "id": "d3",
+   "c": "dairy-eggs",
+   "n": "Cheddar Cheese 200g",
+   "u": "pack",
+   "pr": 9.5
+  },
+  {
+   "id": "d4",
+   "c": "dairy-eggs",
+   "n": "Yogurt 500g",
+   "u": "pc",
+   "pr": 5.5
+  },
+  {
+   "id": "d5",
+   "c": "dairy-eggs",
+   "n": "Butter 200g",
+   "u": "pc",
+   "pr": 9
+  },
+  {
+   "id": "b1",
+   "c": "bakery",
+   "n": "Whole Wheat Bread",
+   "u": "pc",
+   "pr": 4.5,
+   "best": 1
+  },
+  {
+   "id": "b2",
+   "c": "bakery",
+   "n": "Baguette",
+   "u": "pc",
+   "pr": 3
+  },
+  {
+   "id": "b3",
+   "c": "bakery",
+   "n": "Croissant",
+   "u": "pc",
+   "pr": 3.5,
+   "feat": 1
+  },
+  {
+   "id": "b4",
+   "c": "bakery",
+   "n": "Chocolate Cake",
+   "u": "pc",
+   "pr": 18,
+   "old": 22
+  },
+  {
+   "id": "b5",
+   "c": "bakery",
+   "n": "Muffin",
+   "u": "pc",
+   "pr": 4
+  },
+  {
+   "id": "g1",
+   "c": "grocery",
+   "n": "Basmati Rice 5kg",
+   "u": "pack",
+   "pr": 32,
+   "deal": 1,
+   "old": 38,
+   "best": 1
+  },
+  {
+   "id": "g2",
+   "c": "grocery",
+   "n": "Toor Dal",
+   "u": "kg",
+   "pr": 9.5
+  },
+  {
+   "id": "g3",
+   "c": "grocery",
+   "n": "Olive Oil 500ml",
+   "u": "pc",
+   "pr": 29,
+   "feat": 1
+  },
+  {
+   "id": "g4",
+   "c": "grocery",
+   "n": "Sugar 2kg",
+   "u": "pack",
+   "pr": 8.5
+  },
+  {
+   "id": "g5",
+   "c": "grocery",
+   "n": "Wheat Flour 5kg",
+   "u": "pack",
+   "pr": 18
+  },
+  {
+   "id": "v1",
+   "c": "beverages",
+   "n": "Orange Juice 1L",
+   "u": "pc",
+   "pr": 8.5,
+   "feat": 1
+  },
+  {
+   "id": "v2",
+   "c": "beverages",
+   "n": "Water 12 x 500ml",
+   "u": "pack",
+   "pr": 9,
+   "best": 1
+  },
+  {
+   "id": "v3",
+   "c": "beverages",
+   "n": "Cola 6 cans",
+   "u": "pack",
+   "pr": 12
+  },
+  {
+   "id": "v4",
+   "c": "beverages",
+   "n": "Tea Bags 100",
+   "u": "pack",
+   "pr": 14
+  },
+  {
+   "id": "v5",
+   "c": "beverages",
+   "n": "Ground Coffee 200g",
+   "u": "pack",
+   "pr": 22
+  },
+  {
+   "id": "s1",
+   "c": "snacks",
+   "n": "Potato Chips",
+   "u": "pack",
+   "pr": 6
+  },
+  {
+   "id": "s2",
+   "c": "snacks",
+   "n": "Chocolate Bar",
+   "u": "pc",
+   "pr": 5,
+   "best": 1
+  },
+  {
+   "id": "s3",
+   "c": "snacks",
+   "n": "Biscuits",
+   "u": "pack",
+   "pr": 4
+  },
+  {
+   "id": "s4",
+   "c": "snacks",
+   "n": "Mixed Nuts",
+   "u": "kg",
+   "pr": 72
+  },
+  {
+   "id": "s5",
+   "c": "snacks",
+   "n": "Popcorn",
+   "u": "pack",
+   "pr": 5
+  },
+  {
+   "id": "z1",
+   "c": "frozen",
+   "n": "Frozen Peas 1kg",
+   "u": "pack",
+   "pr": 9
+  },
+  {
+   "id": "z2",
+   "c": "frozen",
+   "n": "Ice Cream 1L",
+   "u": "pc",
+   "pr": 16
+  },
+  {
+   "id": "z3",
+   "c": "frozen",
+   "n": "Fish Fingers",
+   "u": "pack",
+   "pr": 15
+  },
+  {
+   "id": "z4",
+   "c": "frozen",
+   "n": "French Fries 1kg",
+   "u": "pack",
+   "pr": 12
+  },
+  {
+   "id": "z5",
+   "c": "frozen",
+   "n": "Chicken Nuggets",
+   "u": "pack",
+   "pr": 17
+  },
+  {
+   "id": "h1",
+   "c": "household",
+   "n": "Dish Soap 750ml",
+   "u": "pc",
+   "pr": 7
+  },
+  {
+   "id": "h2",
+   "c": "household",
+   "n": "Laundry Detergent 3kg",
+   "u": "pack",
+   "pr": 35
+  },
+  {
+   "id": "h3",
+   "c": "household",
+   "n": "Tissue Box",
+   "u": "pack",
+   "pr": 3
+  },
+  {
+   "id": "h4",
+   "c": "household",
+   "n": "Garbage Bags 30",
+   "u": "pack",
+   "pr": 8
+  },
+  {
+   "id": "h5",
+   "c": "household",
+   "n": "Floor Cleaner 1L",
+   "u": "pc",
+   "pr": 12
+  },
+  {
+   "id": "c1",
+   "c": "personal-care",
+   "n": "Shampoo 400ml",
+   "u": "pc",
+   "pr": 16
+  },
+  {
+   "id": "c2",
+   "c": "personal-care",
+   "n": "Toothpaste",
+   "u": "pc",
+   "pr": 7
+  },
+  {
+   "id": "c3",
+   "c": "personal-care",
+   "n": "Soap 4 pcs",
+   "u": "pack",
+   "pr": 9
+  },
+  {
+   "id": "c4",
+   "c": "personal-care",
+   "n": "Deodorant 150ml",
+   "u": "pc",
+   "pr": 13
+  },
+  {
+   "id": "c5",
+   "c": "personal-care",
+   "n": "Hand Wash 500ml",
+   "u": "pc",
+   "pr": 8
+  }
+ ],
+ "legacy": {
+  "fruits-veg": "fruits",
+  "meat-fish": "meat-poultry"
+ }
+}

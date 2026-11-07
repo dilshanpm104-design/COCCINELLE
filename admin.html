@@ -77,7 +77,7 @@ const firebaseConfig = {
 };
 const app=initializeApp(firebaseConfig), auth=getAuth(app), db=getFirestore(app);
 const $=id=>document.getElementById(id);
-const CATS=[["fruits-veg", "Fruits & Vegetables"], ["meat-fish", "Meat & Fish"], ["dairy-eggs", "Dairy & Eggs"], ["bakery", "Bakery"], ["grocery", "Grocery & Pantry"], ["beverages", "Beverages"], ["snacks", "Snacks & Sweets"], ["frozen", "Frozen Food"], ["household", "Household"], ["personal-care", "Health & Beauty"]];let photoData="";
+const CATS=[["fruits","Fresh Fruits"],["vegetables","Fresh Vegetables"],["meat-poultry","Meat & Poultry"],["seafood","Seafood"],["bakery","Bakery"],["dairy-eggs","Dairy & Eggs"],["grocery","Grocery & Pantry"],["beverages","Beverages"],["snacks","Snacks & Sweets"],["frozen","Frozen Foods"],["household","Household Essentials"],["personal-care","Personal Care"]];let photoData="";
 $("category").innerHTML=CATS.map(c=>`<option value="${c[0]}">${c[1].replace("&","&amp;")}</option>`).join("");
 function setSel(id,v){const s=$(id);if(![...s.options].some(o=>o.value==v)){const o=document.createElement("option");o.value=o.textContent=v;s.append(o)}s.value=v}
 const shrink=f=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>{const s=Math.min(1,320/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);c.getContext("2d").drawImage(i,0,0,c.width,c.height);ok(c.toDataURL("image/jpeg",.72))};i.onerror=()=>no(new Error("Could not read the photo"));i.src=URL.createObjectURL(f)});

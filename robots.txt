@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /COCCINELLE/admin.html
+
+Sitemap: https://dilshanpm104-design.github.io/COCCINELLE/sitemap.xml
