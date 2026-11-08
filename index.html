@@ -18,7 +18,7 @@
 <link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fraunces:opsz,wght@9..144,600;9..144,800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
 <a class="skip" href="#app">Skip to content</a>
@@ -39,6 +39,7 @@
 <div class="fc">Orders are confirmed by our team on WhatsApp. No online payment. Prices in AED.</div>
 </footer>
 <div id="dr" role="dialog" aria-modal="true" aria-label="Your basket"><div id="sh"></div></div>
+<div id="pm" role="dialog" aria-modal="true" aria-label="Product details"></div>
 <script>
 const $=s=>document.querySelector(s),E=s=>String(s).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt()+';'),M=n=>'AED '+Number(n).toFixed(2);
 let D,cart={};try{cart=JSON.parse(localStorage.cc||'{}')}catch(e){}
@@ -46,12 +47,19 @@ const sv=()=>{try{localStorage.cc=JSON.stringify(cart)}catch(e){}},P=id=>D.p.fin
 const of=()=>D.p.filter(p=>p.old>p.pr),still=()=>!matchMedia('(prefers-reduced-motion:reduce)').matches;
 const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.08});
 const reveal=()=>document.querySelectorAll('.rv:not(.in)').forEach(e=>io.observe(e));
-/* product card: branded placeholder underneath, photo on top when present */
-const card=(p,i)=>`<article class="pc rv" style="--i:${i%6}"><div class="im"><img class="ph" src="logo.png" alt="" aria-hidden="true">${p.img?`<img class="pp" loading="lazy" decoding="async" src="${E(p.img)}" alt="${E(p.n)}" onerror="this.remove()">`:''}${p.old>p.pr?`<b class="tag">-${Math.round(100-p.pr/p.old*100)}%</b>`:''}</div><h4>${E(p.n)}</h4><div class="pr">${M(p.pr)}<small> / ${E(p.u)}</small>${p.old>p.pr?`<s>${M(p.old)}</s>`:''}</div><button class="btn" data-add="${E(p.id)}">Add to basket</button></article>`;
+const catName=id=>(D.cats.find(c=>c.id==id)||{}).n||'';
+/* ---------- product cards ---------- */
+const card=(p,i)=>`<article class="pc rv" style="--i:${i%6}"><div class="im" data-open="${E(p.id)}"><img class="ph" src="logo.png" alt="" aria-hidden="true">${p.img?`<img class="pp" loading="lazy" decoding="async" src="${E(p.img)}" alt="${E(p.n)}" onerror="this.remove()">`:''}${p.old>p.pr?`<b class="tag">-${Math.round(100-p.pr/p.old*100)}%</b>`:''}</div><h4><a href="#" class="ln" data-open="${E(p.id)}">${E(p.n)}</a></h4><div class="pr">${M(p.pr)}<small> / ${E(p.u)}</small>${p.old>p.pr?`<s>${M(p.old)}</s>`:''}</div><button class="btn" data-add="${E(p.id)}">Add to basket</button></article>`;
 const grid=(l,msg)=>l.length?`<div class="pg">${l.map(card).join('')}</div>`:`<p class="em">${msg||'Nothing here yet. Check back soon.'}</p>`;
 const sec=(t,b,l,sub)=>b?`<section><div class="sh"><div><h2>${t}</h2>${sub?`<p>${sub}</p>`:''}</div>${l?`<a href="${l}">View all</a>`:''}</div>${b}</section>`:'';
+/* ---------- sortable / filterable list pages ---------- */
+let LV={sort:'',off:0},cur=null;
+const sorted=l=>{l=l.slice();if(LV.off)l=l.filter(p=>p.old>p.pr);const s=LV.sort;if(s=='pa')l.sort((a,b)=>a.pr-b.pr);else if(s=='pd')l.sort((a,b)=>b.pr-a.pr);else if(s=='na')l.sort((a,b)=>a.n.localeCompare(b.n));return l};
+function listPage(title,get,msg,sub){cur={get,msg};LV={sort:'',off:0};const n=get().length;return `<section><div class="sh"><div><h2>${title}</h2><p>${sub||n+' item'+(n==1?'':'s')}</p></div></div>${n?`<div class="tb"><label>Sort <select id="so"><option value="">Default</option><option value="pa">Price: low to high</option><option value="pd">Price: high to low</option><option value="na">Name A to Z</option></select></label><label class="ck"><input type="checkbox" id="fo"> Offers only</label></div>`:''}<div id="lg">${grid(sorted(get()),msg)}</div></section>`}
+function relist(){if(!cur)return;$('#lg').innerHTML=grid(sorted(cur.get()),LV.off?'No offers in this list right now.':cur.msg);reveal()}
+/* ---------- home ---------- */
 const tile=(c,k)=>{const n=D.p.filter(p=>p.c==c.id).length;return `<a class="ct rv${c.img?'':' noimg'}" style="--i:${k%4}" href="#cat/${E(c.id)}">${c.img?`<img loading="lazy" decoding="async" src="${E(c.img)}" alt="" onerror="this.parentNode.classList.add('noimg');this.remove()">`:''}<span><b>${E(c.n)}</b><small>${n} item${n==1?'':'s'}</small></span></a>`};
-function dealSec(){const d=D.p.find(p=>p.deal);if(!d)return'';return `<section><div class="deal rv"><div class="di im" style="border-radius:0"><img class="ph" src="logo.png" alt="" aria-hidden="true">${d.img?`<img class="pp" loading="lazy" src="${E(d.img)}" alt="${E(d.n)}" onerror="this.remove()">`:''}</div><div class="dt"><span class="lb">Deal of the day</span><h3>${E(d.n)}</h3><div class="pr">${M(d.pr)}<small> / ${E(d.u)}</small>${d.old>d.pr?`<s>${M(d.old)}</s>`:''}</div><div class="cd" id="cd"></div><div><button class="btn" data-add="${E(d.id)}">Add to basket</button></div></div></div></section>`}
+function dealSec(){const d=D.p.find(p=>p.deal);if(!d)return'';return `<section><div class="deal rv"><div class="di im" style="border-radius:0" data-open="${E(d.id)}"><img class="ph" src="logo.png" alt="" aria-hidden="true">${d.img?`<img class="pp" loading="lazy" src="${E(d.img)}" alt="${E(d.n)}" onerror="this.remove()">`:''}</div><div class="dt"><span class="lb">Deal of the day</span><h3>${E(d.n)}</h3><div class="pr">${M(d.pr)}<small> / ${E(d.u)}</small>${d.old>d.pr?`<s>${M(d.old)}</s>`:''}</div><div class="cd" id="cd"></div><div><button class="btn" data-add="${E(d.id)}">Add to basket</button></div></div></div></section>`}
 function home(){const c=D.cfg,hasOffers=of().length>0;
 return `<div class="hero"><div class="hc"><span class="ey">The Commons, Mirdif</span><h1>Fresh groceries, better living.</h1><p>Fresh food and everyday essentials from your neighbourhood supermarket. Order on WhatsApp. ${E(c.free)}.</p><div class="hb"><a class="btn w" href="#cat/${D.cats[0].id}">Shop now</a><a class="btn o" href="https://wa.me/${E(c.wa)}" target="_blank" rel="noopener">Chat on WhatsApp</a></div><div class="tr"><span>Fresh every day</span><span>Open ${E(c.hours)}</span><span>No online payment</span></div></div><div class="hv" id="hv"></div></div>
 <div class="why"><div><b>Fresh every day</b><small>Fruit, vegetables, butchery, seafood and bakery</small></div><div><b>Free local delivery</b><small>${E(c.free)}</small></div><div><b>Order on WhatsApp</b><small>Our team confirms every order with you</small></div><div><b>Open late</b><small>${E(c.hours)}</small></div></div>
@@ -65,46 +73,91 @@ ${sec('New arrivals',grid(D.p.slice(-10).reverse()),'#new')}`}
 function heroVisual(){const h=$('#hv');if(!h)return;const i=new Image();i.onload=()=>{h.innerHTML='<img class="hh" alt="" src="images/hero.jpg">';h.classList.add('has')};i.onerror=()=>{h.innerHTML='<div class="mo">'+['fruits','vegetables','bakery'].map(x=>{const c=D.cats.find(k=>k.id==x);return c&&c.img?`<img alt="" src="${E(c.img)}" onload="document.getElementById('hv').classList.add('has')" onerror="this.remove()">`:''}).join('')+'</div>'};i.src='images/hero.jpg'}
 const about=()=>`<section class="tx"><h2>About Coccinelle</h2><p>Coccinelle Supermarket is a neighbourhood market at The Commons, Mirdif. Fresh food and everyday essentials are under one roof: fruit and vegetables, butchery, seafood, bakery, beverages, household, and health and beauty.</p><p>Coccinelle is part of a network of about 800 stores, from supermarkets to convenience stores. Its own brands cover nearly 2,000 everyday products at good value, and the Cocci loyalty card rewards regular shoppers in store.</p><p>Live nearby? Order on WhatsApp. ${E(D.cfg.free)}.</p><p><a class="btn" href="${E(D.cfg.web)}" target="_blank" rel="noopener">Visit coccinelle.ae</a></p></section>`;
 const contact=()=>`<section class="tx"><h2>Visit or contact us</h2><p><b>Address:</b> ${E(D.cfg.addr)}</p><p><b>Open:</b> ${E(D.cfg.hours)}</p><p><b>Phone:</b> <a href="tel:${E(D.cfg.phone)}">${E(D.cfg.phoneLabel)}</a></p><p><a class="btn" href="https://wa.me/${E(D.cfg.wa)}" target="_blank" rel="noopener">Chat on WhatsApp</a> <a class="btn k" href="${E(D.cfg.map)}" target="_blank" rel="noopener">Open in Maps</a></p><div class="lk"><a href="${E(D.cfg.ig)}" target="_blank" rel="noopener">Instagram</a><a href="${E(D.cfg.fb)}" target="_blank" rel="noopener">Facebook</a><a href="${E(D.cfg.cat)}" target="_blank" rel="noopener">WhatsApp catalogue</a></div></section>`;
-function route(){if(!D)return;$('#q').value='';const h=decodeURIComponent(location.hash.slice(1)||'home').split('/'),a=h[0],c=D.cats.find(x=>x.id==h[1]);
-const pages={home,about,contact,offers:()=>sec('Special offers',grid(of())),deals:()=>sec('Deal of the day',grid(D.p.filter(p=>p.deal)))+sec('All discounted items',grid(of())),new:()=>sec('New arrivals',grid(D.p.slice(-12).reverse())),cat:()=>c?sec(E(c.n),grid(D.p.filter(p=>p.c==c.id))):home()};
+/* ---------- routing / search ---------- */
+function route(){if(!D)return;$('#q').value='';const h=decodeURIComponent(location.hash.slice(1)||'home').split('/'),a=h[0],c=D.cats.find(x=>x.id==h[1]);cur=null;
+const pages={home,about,contact,offers:()=>listPage('Special offers',of,'No special offers right now. Check back soon.'),deals:()=>sec('Deal of the day',grid(D.p.filter(p=>p.deal),'No deal of the day right now.'))+listPage('All discounted items',of,'No discounted items right now.'),new:()=>sec('New arrivals',grid(D.p.slice(-12).reverse())),cat:()=>c?listPage(E(c.n),()=>D.p.filter(p=>p.c==c.id)):home()};
 $('#app').innerHTML=(pages[a]||home)();
-const cur='#'+(a=='cat'?'cat/'+h[1]:a);document.querySelectorAll('nav a').forEach(x=>{const on=x.getAttribute('href')==cur;x.classList.toggle('on',on);if(on)x.scrollIntoView({inline:'center',block:'nearest'})});
+const cu='#'+(a=='cat'?'cat/'+h[1]:a);document.querySelectorAll('nav a').forEach(x=>{const on=x.getAttribute('href')==cu;x.classList.toggle('on',on);if(on)x.scrollIntoView({inline:'center',block:'nearest'})});
 document.title=(a=='cat'&&c?c.n+' | ':'')+'Coccinelle Supermarket, The Commons, Mirdif, Dubai';
 scrollTo(0,0);reveal();heroVisual();tick()}
-let qt;function srch(){clearTimeout(qt);qt=setTimeout(()=>{const v=$('#q').value.trim().toLowerCase();if(v.length<2)return route();const cn=id=>(D.cats.find(c=>c.id==id)||{}).n||'';$('#app').innerHTML=sec('Results for "'+E(v)+'"',grid(D.p.filter(p=>(p.n+' '+cn(p.c)).toLowerCase().includes(v)),'No products match your search. Try another word or browse a category.'));reveal()},150)}
+let qt;function srch(){clearTimeout(qt);qt=setTimeout(()=>{const v=$('#q').value.trim().toLowerCase();if(v.length<2)return route();$('#app').innerHTML=listPage('Results for "'+E(v)+'"',()=>D.p.filter(p=>(p.n+' '+catName(p.c)).toLowerCase().includes(v)),'No products match your search. Try another word or browse a category.');reveal()},150)}
 function tick(){const e=$('#cd');if(!e)return;const n=new Date(),m=new Date(n);m.setHours(24,0,0,0);const s=Math.floor((m-n)/1e3),f=x=>String(x).padStart(2,'0');e.textContent=`Offer day ends in ${f(s/3600|0)}:${f(s%3600/60|0)}:${f(s%60)}`}
 setInterval(tick,1000);
-function fly(b){const c=b.closest('.pc,.deal'),s=(c&&c.querySelector('.im'))||b,r=s.getBoundingClientRect(),t=$('.cb').getBoundingClientRect(),d=document.createElement('div');d.className='fly';d.style.left=(r.left+r.width/2-22)+'px';d.style.top=(r.top+r.height/2-22)+'px';document.body.append(d);
+/* ---------- product details ---------- */
+let pq=1,pid=null;
+function openP(id){const p=P(id);if(!p)return;pid=id;pq=st(p);
+$('#pm').innerHTML=`<div class="pb"><button class="pcl" data-close="pm" aria-label="Close">×</button><div class="im pi"><img class="ph" src="logo.png" alt="" aria-hidden="true">${p.img?`<img class="pp" src="${E(p.img)}" alt="${E(p.n)}" onerror="this.remove()">`:''}${p.old>p.pr?`<b class="tag">-${Math.round(100-p.pr/p.old*100)}%</b>`:''}</div><div class="pd"><span class="eb">${E(catName(p.c))}</span><h3>${E(p.n)}</h3><div class="pr">${M(p.pr)}<small> / ${E(p.u)}</small>${p.old>p.pr?`<s>${M(p.old)}</s>`:''}</div>${p.d?`<p class="ds">${E(p.d)}</p>`:''}<div class="qr"><button data-pq="-1" aria-label="Less">−</button><output id="pqv"></output><span>${E(p.u)}</span><button data-pq="1" aria-label="More">+</button></div><button class="btn" data-padd="1">Add to basket · <span id="pqt"></span></button></div></div>`;pqu();$('#pm').classList.add('o');const b=$('#pm .pcl');if(b)b.focus()}
+function pqu(){const p=P(pid);$('#pqv').textContent=pq;$('#pqt').textContent=M(p.pr*pq)}
+/* ---------- basket maths (integer fils) ---------- */
+const FIL=n=>Math.round(n*100),A=n=>M(n/100),lineF=p=>Math.round(FIL(p.pr)*cart[p.id]);
+const items=()=>Object.keys(cart).map(P).filter(Boolean),upd=()=>{$('#cn').textContent=items().length};
+function calc(type){const c=D.cfg,sub=items().reduce((s,p)=>s+lineF(p),0);let disc=0;if(+c.discountPct>0&&sub>=FIL(+c.discountMin||0))disc=Math.round(sub*c.discountPct/100);const fee=type=='Delivery'?FIL(+c.deliveryFee||0):0;return{sub,disc,fee,total:sub-disc+fee}}
+function fly(b){const c=b.closest('.pc,.deal,.pb'),s=(c&&c.querySelector('.im'))||b,r=s.getBoundingClientRect(),t=$('.cb').getBoundingClientRect(),d=document.createElement('div');d.className='fly';d.style.left=(r.left+r.width/2-22)+'px';d.style.top=(r.top+r.height/2-22)+'px';document.body.append(d);
 d.animate([{transform:'translate(0,0) scale(1)',opacity:1},{transform:`translate(${t.left+t.width/2-r.left-r.width/2}px,${t.top+t.height/2-r.top-r.height/2}px) scale(.25)`,opacity:.3}],{duration:700,easing:'cubic-bezier(.5,-.2,.7,.4)'}).onfinish=()=>d.remove()}
-function add(id,b){if(!P(id))return;cart[id]=+((cart[id]||0)+st(P(id))).toFixed(1);sv();upd();const x=$('.cb');x.classList.remove('bump');void x.offsetWidth;x.classList.add('bump');if(b&&still())fly(b)}
-function chg(id,d){cart[id]=Math.max(0,+((cart[id]||0)+d*st(P(id))).toFixed(1));if(!cart[id])delete cart[id];sv();upd();drawer()}
-const items=()=>Object.keys(cart).map(P).filter(Boolean),tot=()=>items().reduce((s,p)=>s+p.pr*cart[p.id],0),upd=()=>{$('#cn').textContent=items().length};
-function tg(){const p=document.querySelector('input[value=Pickup]').checked;$('#dd').style.display=p?'none':'grid'}
-function drawer(){const l=items(),f=['nm','ph','lc'],s=f.map(i=>($('#'+i)||{}).value||''),pk=document.querySelector('input[value=Pickup]'),was=pk&&pk.checked;
-$('#sh').innerHTML='<h3>Your order</h3>'+(l.length?l.map(p=>`<div class="ci"><span>${E(p.n)}<small>${M(p.pr)} / ${E(p.u)}</small></span><span class="q"><button data-chg="${E(p.id)}" data-d="-1" aria-label="Decrease ${E(p.n)}">−</button>${cart[p.id]} ${E(p.u)}<button data-chg="${E(p.id)}" data-d="1" aria-label="Increase ${E(p.n)}">+</button></span></div>`).join('')+`<p class="tt">Total ${M(tot())}</p><div class="fm"><div><label><input type="radio" name="t" value="Delivery" checked> Delivery</label><label><input type="radio" name="t" value="Pickup"> Pickup</label></div><div id="dd"><input id="nm" placeholder="Your name" autocomplete="name"><input id="ph" type="tel" placeholder="Your WhatsApp number" autocomplete="tel"><input id="lc" placeholder="Building, area, location" autocomplete="street-address"></div></div><button class="btn" id="sendBtn">Send order on WhatsApp</button>`:'<p class="em">Your basket is empty.</p>')+`<button class="x" id="closeDr">Close</button>`;
-if(l.length){f.forEach((i,k)=>$('#'+i).value=s[k]);if(was){document.querySelector('input[value=Pickup]').checked=true;tg()}}$('#dr').classList.add('o')}
-function send(){const t=document.querySelector('input[name=t]:checked').value,n=$('#nm').value.trim(),ph=$('#ph').value.trim(),lc=$('#lc').value.trim();
-if(t=='Delivery'&&!(n&&ph&&lc))return alert('Please enter your name, WhatsApp number and location.');
-const m='Hello Coccinelle, I would like to order:\n'+items().map(p=>`- ${p.n}: ${cart[p.id]} ${p.u} = ${M(p.pr*cart[p.id])}`).join('\n')+`\nTotal: ${M(tot())}\nOrder type: ${t}`+(t=='Delivery'?`\nName: ${n}\nPhone: ${ph}\nLocation: ${lc}`:'');
-open('https://wa.me/'+D.cfg.wa+'?text='+encodeURIComponent(m),'_blank')}
-/* one delegated listener for all buttons */
-document.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-add]');if(a)return add(a.dataset.add,a);const c=t.closest('[data-chg]');if(c)return chg(c.dataset.chg,+c.dataset.d);if(t.closest('#sendBtn'))return send();if(t.closest('#closeDr')||t.id=='dr')return $('#dr').classList.remove('o');if(t.closest('#cartBtn'))drawer()});
-document.addEventListener('change',e=>{if(e.target.name=='t')tg()});
-document.addEventListener('keydown',e=>{if(e.key=='Escape')$('#dr').classList.remove('o')});
+function add(id,b,q){const p=P(id);if(!p)return;cart[id]=+((cart[id]||0)+(q||st(p))).toFixed(1);sv();upd();const x=$('.cb');x.classList.remove('bump');void x.offsetWidth;x.classList.add('bump');if(b&&still())fly(b)}
+function chg(id,d){const p=P(id);if(!p)return;cart[id]=Math.max(0,+((cart[id]||0)+d*st(p)).toFixed(1));if(!cart[id])delete cart[id];sv();upd();drawer()}
+function rm(id){delete cart[id];sv();upd();drawer()}
+/* ---------- checkout form state (remembered on this device, notes excluded) ---------- */
+let form={t:'Delivery',nm:'',ph:'',lc:'',nt:'',hp:''};try{const s=JSON.parse(localStorage.ccf||'{}');form.nm=s.nm||'';form.ph=s.ph||'';form.lc=s.lc||''}catch(e){}
+const saveForm=()=>{try{localStorage.ccf=JSON.stringify({nm:form.nm,ph:form.ph,lc:form.lc})}catch(e){}};
+function normPhone(v){let d=String(v).replace(/\D/g,'');if(d.startsWith('00'))d=d.slice(2);if(d.startsWith('0'))d='971'+d.slice(1);return d}
+function drawer(){const l=items(),t=form.t,c=calc(t),cf=D.cfg;
+$('#sh').innerHTML='<h3>Your order</h3>'+(l.length?l.map(p=>`<div class="ci"><span>${E(p.n)}<small>${M(p.pr)} / ${E(p.u)} · ${A(lineF(p))}</small></span><span class="q"><button data-chg="${E(p.id)}" data-d="-1" aria-label="Decrease ${E(p.n)}">−</button><b>${cart[p.id]}</b> ${E(p.u)}<button data-chg="${E(p.id)}" data-d="1" aria-label="Increase ${E(p.n)}">+</button><button class="rm" data-rm="${E(p.id)}" aria-label="Remove ${E(p.n)}">✕</button></span></div>`).join('')+
+`<div class="sm"><div><span>Subtotal</span><span>${A(c.sub)}</span></div>${c.disc?`<div><span>Discount</span><span>-${A(c.disc)}</span></div>`:''}${c.fee?`<div><span>Delivery</span><span>${A(c.fee)}</span></div>`:''}<div class="tt"><span>Total</span><span>${A(c.total)}</span></div></div>`+
+`<div class="fm"><div class="ty"><label><input type="radio" name="t" value="Delivery" ${t=='Delivery'?'checked':''}> Delivery</label><label><input type="radio" name="t" value="Pickup" ${t=='Pickup'?'checked':''}> Pickup</label></div>${t=='Delivery'?`<p class="hn">${E(cf.free)}.</p>`:`<p class="hn">Collect from ${E(cf.addr)}.</p>`}<input id="nm" placeholder="Your name" autocomplete="name" value="${E(form.nm)}"><input id="ph" type="tel" inputmode="tel" placeholder="Your WhatsApp number" autocomplete="tel" value="${E(form.ph)}">${t=='Delivery'?`<input id="lc" placeholder="Building, area, location" autocomplete="street-address" value="${E(form.lc)}">`:''}<input id="nt" placeholder="Notes for our team (optional)" maxlength="300" value="${E(form.nt)}"><input id="hp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" value=""></div><p class="er" id="er" role="alert"></p><button class="btn" id="sendBtn">Place order on WhatsApp</button><p class="hn">Your order is confirmed only when our team replies on WhatsApp.</p>`:'<p class="em">Your basket is empty.</p>')+`<button class="x" data-close="dr">Close</button>`;
+$('#dr').classList.add('o')}
+/* ---------- orders: save first, then WhatsApp ---------- */
+let FBP;const fb=()=>FBP||(FBP=(async()=>{const u='https://www.gstatic.com/firebasejs/10.12.2/',[a,f]=await Promise.all([import(u+'firebase-app.js'),import(u+'firebase-firestore.js')]);return{f,db:f.getFirestore(a.initializeApp(FB))}})());
+async function saveOrder(o){const{f,db}=await fb();await f.setDoc(f.doc(db,'orders',o.orderId),{...o,createdAt:f.serverTimestamp()})}
+function orderId(){const d=new Date(),p=n=>String(n).padStart(2,'0'),al='ABCDEFGHJKLMNPQRSTUVWXYZ23456789',r=crypto.getRandomValues(new Uint8Array(5));return `CC-${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}-`+[...r].map(x=>al[x%al.length]).join('')}
+const getQ=()=>{try{return JSON.parse(localStorage.ccq||'[]')}catch(e){return[]}},setQ=q=>{try{localStorage.ccq=JSON.stringify(q.slice(-20))}catch(e){}};
+function queue(o){setQ(getQ().concat({o,at:Date.now()}))}
+async function flushQueue(){const q=getQ().filter(x=>Date.now()-x.at<864e5);if(!q.length)return setQ([]);const keep=[];for(const x of q){try{await saveOrder(x.o)}catch(e){keep.push(x)}}setQ(keep)}
+function waText(o,c){const L=o.items.map(i=>`- ${i.name}: ${i.qty} ${i.unit} x ${M(i.unitPrice)} = ${M(i.lineTotal)}`);
+return ['Hello Coccinelle, I would like to place an order.','Order ID: '+o.orderId,'',...L,'',`Subtotal: ${M(o.subtotal)}`,...(o.discount?[`Discount: -${M(o.discount)}`]:[]),...(o.deliveryCharge?[`Delivery: ${M(o.deliveryCharge)}`]:[]),`Total: ${M(o.total)}`,'Order type: '+(o.fulfilment=='delivery'?'Delivery':'Pickup'),'Name: '+o.customer.name,'Phone: '+o.customer.phone,...(o.customer.address?['Address: '+o.customer.address]:[]),...(o.notes?['Notes: '+o.notes]:[])].join('\n')}
+let busy=0;
+async function placeOrder(){if(busy)return;const t=form.t,l=items(),er=m=>{const e=$('#er');if(e)e.textContent=m};if(!l.length)return;
+const nm=form.nm.trim(),ph=normPhone(form.ph),lc=form.lc.trim(),c=calc(t);
+if(form.hp)return;
+if(nm.length<2)return er('Please enter your name.');
+if(!/^\d{8,15}$/.test(ph))return er('Please enter a valid WhatsApp number, for example 050 123 4567.');
+if(t=='Delivery'&&lc.length<5)return er('Please enter your building, area and location for delivery.');
+if(+D.cfg.minOrder>0&&c.sub<FIL(+D.cfg.minOrder))return er('The minimum order is '+M(D.cfg.minOrder)+'.');
+if(Date.now()-(+localStorage.cct||0)<15000)return er('Please wait a few seconds before sending another order.');
+busy=1;const btn=$('#sendBtn');btn.disabled=true;btn.textContent='Saving your order…';
+const w=open('about:blank','_blank');/* opened inside the tap so mobile browsers do not block it */
+const id=orderId(),o={orderId:id,status:'awaiting_confirmation',paymentStatus:'pending',fulfilment:t.toLowerCase(),customer:{name:nm,phone:ph,address:t=='Delivery'?lc:''},items:l.map(p=>({id:String(p.id),name:p.n,unit:p.u,qty:cart[p.id],unitPrice:p.pr,lineTotal:lineF(p)/100})),subtotal:c.sub/100,discount:c.disc/100,deliveryCharge:c.fee/100,total:c.total/100,currency:'AED',notes:form.nt.trim().slice(0,300),source:'website',totalsVerified:false,clientCreatedAt:new Date().toISOString()};
+let saved=false;try{await Promise.race([saveOrder(o),new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),7000))]);saved=true}catch(e){queue(o)}
+const url='https://wa.me/'+D.cfg.wa+'?text='+encodeURIComponent(waText(o,c));
+if(w){try{w.location.href=url}catch(e){}}
+try{localStorage.cct=Date.now()}catch(e){}
+cart={};sv();upd();form.nt='';busy=0;
+$('#sh').innerHTML=`<h3>Order ${saved?'recorded':'ready to send'}</h3><p class="ok">${E(id)}</p>${saved?'<p>We have recorded your order.</p>':'<p>We could not record your order online just now, so please be sure to send the WhatsApp message. We will retry saving it automatically.</p>'}<p><b>Your order is not confirmed until our team replies on WhatsApp.</b> If WhatsApp did not open, tap the button below and press send.</p><a class="btn" href="${E(url)}" target="_blank" rel="noopener">Open WhatsApp</a><button class="x" data-close="dr">Close</button>`}
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{const t=e.target,a=t.closest('[data-add]');if(a)return add(a.dataset.add,a);const o=t.closest('[data-open]');if(o){e.preventDefault();return openP(o.dataset.open)}
+const c=t.closest('[data-chg]');if(c)return chg(c.dataset.chg,+c.dataset.d);const r=t.closest('[data-rm]');if(r)return rm(r.dataset.rm);
+if(t.closest('#sendBtn'))return placeOrder();const x=t.closest('[data-close]');if(x||t.id=='dr'||t.id=='pm')return $(x?'#'+x.dataset.close:'#'+t.id).classList.remove('o');
+const q=t.closest('[data-pq]');if(q){const p=P(pid);pq=Math.max(st(p),+(pq+ +q.dataset.pq*st(p)).toFixed(1));return pqu()}
+if(t.closest('[data-padd]')){const b=t.closest('[data-padd]');add(pid,b,pq);return $('#pm').classList.remove('o')}
+if(t.closest('#cartBtn'))drawer()});
+document.addEventListener('change',e=>{const t=e.target;if(t.name=='t'){form.t=t.value;drawer()}else if(t.id=='so'){LV.sort=t.value;relist()}else if(t.id=='fo'){LV.off=t.checked?1:0;relist()}});
+document.addEventListener('input',e=>{const t=e.target;if(t.closest&&t.closest('#sh')&&['nm','ph','lc','nt','hp'].includes(t.id)){form[t.id]=t.value;if(t.id!='nt'&&t.id!='hp')saveForm()}});
+document.addEventListener('keydown',e=>{if(e.key=='Escape'){$('#dr').classList.remove('o');$('#pm').classList.remove('o')}});
 $('#q').addEventListener('input',srch);
 const FB={apiKey:"AIzaSyDg7DfIV3f1pA5qV_VGgvoQV24Y2QvWiK8",authDomain:"coccinelle-supermarket.firebaseapp.com",projectId:"coccinelle-supermarket",storageBucket:"coccinelle-supermarket.firebasestorage.app",messagingSenderId:"227874611552",appId:"1:227874611552:web:b30f8ab364ff89e4cffe05"};
 /* Live data from Firestore. Falls back silently to products.json if it cannot be read. */
-async function live(){try{const u='https://www.gstatic.com/firebasejs/10.12.2/',[a,f]=await Promise.all([import(u+'firebase-app.js'),import(u+'firebase-firestore.js')]);const db=f.getFirestore(a.initializeApp(FB)),[s,cs]=await Promise.all([f.getDocs(f.collection(db,'products')),f.getDocs(f.collection(db,'categories')).catch(()=>null)]);
+async function live(){try{const{f,db}=await fb(),[s,cs,sd]=await Promise.all([f.getDocs(f.collection(db,'products')),f.getDocs(f.collection(db,'categories')).catch(()=>null),f.getDoc(f.doc(db,'settings','public')).catch(()=>null)]);
 const byName=new Map(D.p.map(p=>[p.n.toLowerCase(),p.c])),ids=new Set(D.cats.map(c=>c.id)),fix=p=>ids.has(p.category)?p.category:(byName.get((p.name||'').toLowerCase())||D.legacy[p.category]||p.category);
-const prods=s.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.available!==false&&p.name).map(p=>{const c=p.createdAt||{};return{id:p.id,c:fix(p),n:p.name,u:p.unit||'pc',pr:+p.price||0,old:+p.oldPrice||0,img:p.imageUrl||p.imageData||'',deal:p.deal?1:0,feat:p.featured?1:0,best:p.bestSeller?1:0,t:(c.seconds||0)*1e3+(c.nanoseconds||0)/1e6}}).sort((x,y)=>x.t-y.t);
-const cats=cs?cs.docs.map(d=>({id:d.id,...d.data()})):[];return{prods,cats}}catch(e){return{prods:[],cats:[]}}}
+const prods=s.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.available!==false&&p.name).map(p=>{const c=p.createdAt||{};return{id:p.id,c:fix(p),n:p.name,u:p.unit||'pc',pr:+p.price||0,old:+p.oldPrice||0,img:p.imageUrl||p.imageData||'',d:p.note||p.description||'',deal:p.deal?1:0,feat:p.featured?1:0,best:p.bestSeller?1:0,t:(c.seconds||0)*1e3+(c.nanoseconds||0)/1e6}}).sort((x,y)=>x.t-y.t);
+const cats=cs?cs.docs.map(d=>({id:d.id,...d.data()})):[],set=sd&&sd.exists()?sd.data():{};return{prods,cats,set}}catch(e){return{prods:[],cats:[],set:{}}}}
 fetch('products.json?'+Date.now()).then(r=>r.json()).then(async d=>{D=d;const l=await live();if(l.prods.length)D.p=l.prods;
 l.cats.forEach(o=>{const c=D.cats.find(x=>x.id==o.id);if(c&&o.imageUrl)c.img=o.imageUrl});
+['wa','phone','phoneLabel','hours','addr','free','map','deliveryFee','minOrder','discountPct','discountMin'].forEach(k=>{if(l.set[k]!==undefined&&l.set[k]!=='')D.cfg[k]=l.set[k]});
 $('nav').innerHTML=[['home','Home'],...D.cats.map(c=>['cat/'+c.id,c.n]),['offers','Offers'],['deals','Deals'],['about','About'],['contact','Contact']].map(([h,t])=>`<a href="#${E(h)}">${E(t)}</a>`).join('');
 $('#bar').innerHTML=`<b>${E(D.cfg.free)}</b> · Open ${E(D.cfg.hours)} · Order on WhatsApp`;
 $('#f1').innerHTML=`<h5>Visit us</h5><p>${E(D.cfg.addr)}</p><p>Open ${E(D.cfg.hours)}</p><p><a href="tel:${E(D.cfg.phone)}">${E(D.cfg.phoneLabel)}</a></p><p><a href="${E(D.cfg.map)}" target="_blank" rel="noopener">Open in Maps</a></p>`;
 $('#f2').innerHTML=`<h5>Follow &amp; order</h5><ul><li><a href="https://wa.me/${E(D.cfg.wa)}" target="_blank" rel="noopener">WhatsApp</a></li><li><a href="${E(D.cfg.ig)}" target="_blank" rel="noopener">Instagram</a></li><li><a href="${E(D.cfg.fb)}" target="_blank" rel="noopener">Facebook</a></li><li><a href="${E(D.cfg.cat)}" target="_blank" rel="noopener">WhatsApp catalogue</a></li></ul>`;
-upd();route()}).catch(()=>{$('#app').innerHTML='<p class="em" style="padding:30px 0">Could not load products. Please refresh.</p>'});
+upd();route();flushQueue()}).catch(()=>{$('#app').innerHTML='<p class="em" style="padding:30px 0">Could not load products. Please refresh.</p>'});
 addEventListener('hashchange',route);
 </script>
 </body>

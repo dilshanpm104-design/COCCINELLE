@@ -1,0 +1,128 @@
+rules_version = '2';
+// COCCINELLE Supermarket - Firestore security rules (v2).
+// NOT YET PUBLISHED. These rules have not been run against the Firebase emulator;
+// test them in Firebase Console > Firestore > Rules > Rules Playground before publishing.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+    function signedIn() { return request.auth != null; }
+    function adminDoc() {
+      return get(/databases/$(database)/documents/admins/$(request.auth.uid)).data;
+    }
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+        && adminDoc().active == true;
+    }
+    // Roles: owner, manager, sales, inventory, viewer. 'staff' is the legacy role from v1 and is
+    // treated like a manager for products only (so existing staff keep working until migrated).
+    function hasRole(roles) { return isAdmin() && adminDoc().role in roles; }
+
+    // ---------- staff ----------
+    match /admins/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || hasRole(['owner']));
+      allow write: if hasRole(['owner']);
+    }
+
+    // ---------- public catalogue (read by every visitor) ----------
+    // IMPORTANT: never store purchase prices or stock costs in these documents. They are public.
+    match /products/{id} {
+      allow read: if true;
+      allow create, update, delete: if hasRole(['owner', 'manager', 'inventory', 'staff']);
+    }
+    match /categories/{id} {
+      allow read: if true;
+      allow create, update, delete: if hasRole(['owner', 'manager', 'inventory']);
+    }
+    // Only the 'public' settings document is visible to visitors (store name, hours, delivery text...).
+    match /settings/{id} {
+      allow read: if id == 'public' || isAdmin();
+      allow write: if hasRole(['owner']);
+    }
+
+    // ---------- orders ----------
+    function validCustomer(c) {
+      return c is map
+        && c.keys().hasOnly(['name', 'phone', 'address'])
+        && c.name is string && c.name.size() >= 2 && c.name.size() <= 80
+        && c.phone is string && c.phone.matches('^[0-9]{8,15}$')
+        && c.address is string && c.address.size() <= 200;
+    }
+    function validOrder(orderId) {
+      let d = request.resource.data;
+      return d.keys().hasOnly(['orderId', 'status', 'paymentStatus', 'fulfilment', 'customer', 'items',
+                               'subtotal', 'discount', 'deliveryCharge', 'total', 'currency', 'notes',
+                               'source', 'totalsVerified', 'clientCreatedAt', 'createdAt'])
+        && d.keys().hasAll(['orderId', 'status', 'paymentStatus', 'fulfilment', 'customer', 'items',
+                            'subtotal', 'discount', 'deliveryCharge', 'total', 'currency', 'createdAt'])
+        && d.orderId == orderId
+        && d.orderId.matches('^CC-[0-9]{8}-[A-Z0-9]{4,6}$')
+        && d.status == 'awaiting_confirmation'
+        && d.paymentStatus == 'pending'
+        && d.fulfilment in ['delivery', 'pickup']
+        && validCustomer(d.customer)
+        && (d.fulfilment == 'pickup' || d.customer.address.size() >= 5)
+        && d.items is list && d.items.size() >= 1 && d.items.size() <= 60
+        && d.subtotal is number && d.subtotal >= 0 && d.subtotal <= 20000
+        && d.discount is number && d.discount >= 0 && d.discount <= d.subtotal
+        && d.deliveryCharge is number && d.deliveryCharge >= 0 && d.deliveryCharge <= 500
+        && d.total is number && d.total >= 0 && d.total <= 20000
+        && d.currency == 'AED'
+        && (!('notes' in d) || (d.notes is string && d.notes.size() <= 300))
+        && (!('totalsVerified' in d) || d.totalsVerified == false)
+        && d.createdAt == request.time;
+    }
+    match /orders/{orderId} {
+      // Visitors can only CREATE a new order in the 'awaiting_confirmation' state. They can never read it back.
+      allow create: if validOrder(orderId);
+      allow read: if hasRole(['owner', 'manager', 'sales', 'viewer']);
+      allow update: if hasRole(['owner', 'manager', 'sales']);
+      allow delete: if hasRole(['owner']);
+    }
+
+    // ---------- business data (staff only; refined in later milestones) ----------
+    match /customers/{id} {
+      allow read: if hasRole(['owner', 'manager', 'sales']);
+      allow create, update: if hasRole(['owner', 'manager', 'sales']);
+      allow delete: if hasRole(['owner']);
+    }
+    match /payments/{id} {
+      allow read: if hasRole(['owner', 'manager', 'sales', 'viewer']);
+      allow create, update: if hasRole(['owner', 'manager']);
+      allow delete: if false;
+    }
+    match /inventory/{id} {
+      allow read: if hasRole(['owner', 'manager', 'inventory', 'viewer']);
+      allow create, update: if hasRole(['owner', 'manager', 'inventory']);
+      allow delete: if hasRole(['owner']);
+    }
+    match /stock_movements/{id} {
+      allow read: if hasRole(['owner', 'manager', 'inventory', 'viewer']);
+      allow create: if hasRole(['owner', 'manager', 'inventory']);
+      allow update, delete: if false;
+    }
+    match /expenses/{id} {
+      allow read: if hasRole(['owner', 'manager', 'viewer']);
+      allow create, update: if hasRole(['owner', 'manager']);
+      allow delete: if hasRole(['owner']);
+    }
+    match /daily_reports/{id} {
+      allow read: if hasRole(['owner', 'manager', 'viewer']);
+      allow write: if hasRole(['owner', 'manager']);
+    }
+    match /monthly_reports/{id} {
+      allow read: if hasRole(['owner', 'manager', 'viewer']);
+      allow write: if hasRole(['owner', 'manager']);
+    }
+    // Audit log: staff can add entries, nobody can edit or delete them from the app.
+    match /audit_logs/{id} {
+      allow read: if hasRole(['owner', 'manager']);
+      allow create: if isAdmin() && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // Everything else is denied.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

@@ -122,3 +122,22 @@ footer p,footer li{margin:3px 0;list-style:none}footer a{text-decoration:none;fo
 .fly{position:fixed;width:44px;height:44px;border-radius:50%;z-index:60;pointer-events:none;background:radial-gradient(circle at 32% 28%,#e0505e,var(--r) 60%,var(--rx));box-shadow:0 8px 14px #0006}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}.rv{opacity:1}}
 @media(min-width:760px){.sb{order:2;flex:0 1 380px}.cb{order:3}.lg{height:54px}}
+/* M2: list toolbar, product dialog, basket summary, order confirmation */
+.tb{display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin:-4px 0 16px;font-size:14px}
+.tb select{margin-left:6px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font:14px "DM Sans",sans-serif;background:#fff}
+.tb .ck{display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.ln{text-decoration:none}.ln:hover{color:var(--r)}.im[data-open],.di[data-open]{cursor:pointer}
+#pm{position:fixed;inset:0;background:#170a0c99;display:none;z-index:55;padding:14px;overflow:auto}#pm.o{display:grid;place-items:center}
+.pb{position:relative;background:#fff;border-radius:24px;max-width:760px;width:100%;display:grid;overflow:hidden;box-shadow:0 30px 60px -20px #000a}
+@media(min-width:700px){.pb{grid-template-columns:1fr 1fr}}
+.pb .pi{aspect-ratio:1;border-radius:0}.pd{padding:24px;display:grid;gap:10px;align-content:center}
+.pd h3{font-size:clamp(22px,4.4vw,30px)}.pd .pr{font-size:24px;padding:0}.eb{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--g);font-weight:700}
+.ds{color:var(--g);font-size:14.5px}
+.pcl{position:absolute;top:10px;right:10px;z-index:3;width:38px;height:38px;border-radius:50%;border:0;background:#ffffffe6;font-size:24px;line-height:1;cursor:pointer;box-shadow:0 4px 10px #0003}
+.qr{display:flex;align-items:center;gap:10px;margin:4px 0}.qr button{width:40px;height:40px;border-radius:50%;border:1px solid #ddd;background:#fff;font-size:20px;cursor:pointer}.qr output{min-width:2.2em;text-align:center;font-weight:700;font-size:18px}
+.sm{display:grid;gap:4px;padding:10px 0;border-top:1px solid #eee}.sm>div{display:flex;justify-content:space-between;font-size:14.5px}.sm .tt{font-size:18px;margin-top:4px}
+.ci .q b{min-width:1.6em;text-align:center}.q .rm{border:0;background:none;color:var(--g);width:28px;font-size:14px}
+.hn{font-size:13px;color:var(--g)}.er{color:#a41425;font-size:14px;font-weight:700;min-height:1.2em}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.ok{font:700 22px Fraunces,Georgia,serif;color:var(--r);letter-spacing:.02em}
+#sendBtn:disabled{opacity:.6;cursor:progress}

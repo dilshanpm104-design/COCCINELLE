@@ -11,7 +11,11 @@
   "cat": "https://wa.me/c/97143499605",
   "phone": "+97143499605",
   "phoneLabel": "+971 4 349 9605",
-  "site": "https://dilshanpm104-design.github.io/COCCINELLE/"
+  "site": "https://dilshanpm104-design.github.io/COCCINELLE/",
+  "deliveryFee": 0,
+  "minOrder": 0,
+  "discountPct": 0,
+  "discountMin": 0
  },
  "cats": [
   {
