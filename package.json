@@ -2,5 +2,5 @@
   "name": "coccinelle",
   "private": true,
   "type": "module",
-  "scripts": { "test": "node tests/stats.test.mjs" }
+  "scripts": { "test": "node tests/stats.test.mjs && node tests/logic.test.mjs && node tests/stock.test.mjs" }
 }

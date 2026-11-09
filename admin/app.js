@@ -2,7 +2,7 @@
 // The browser only decides what to SHOW. Firestore security rules (firestore.rules) decide what is ALLOWED.
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
-import { getFirestore, collection, getDocs, getDoc, doc, setDoc, addDoc, updateDoc, deleteDoc, writeBatch, query, orderBy, limit, onSnapshot, serverTimestamp, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+import { getFirestore, collection, getDocs, getDoc, doc, setDoc, addDoc, updateDoc, deleteDoc, writeBatch, runTransaction, query, orderBy, limit, onSnapshot, serverTimestamp, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import * as S from './stats.js';
 import { SECTIONS, ROLES, can, canSee, firstSection } from './perms.js';
 import { $, $$, esc, icon, toast, closeModal, aed } from './ui.js';
@@ -11,6 +11,10 @@ import orders from './views/orders.js';
 import customers from './views/customers.js';
 import payments from './views/payments.js';
 import products from './views/products.js';
+import categories from './views/categories.js';
+import inventory from './views/inventory.js';
+import offers from './views/offers.js';
+import * as K from './stock.js';
 import { soonView } from './views/soon.js';
 
 const firebaseConfig = { apiKey: 'AIzaSyDg7DfIV3f1pA5qV_VGgvoQV24Y2QvWiK8', authDomain: 'coccinelle-supermarket.firebaseapp.com', projectId: 'coccinelle-supermarket', storageBucket: 'coccinelle-supermarket.firebasestorage.app', messagingSenderId: '227874611552', appId: '1:227874611552:web:b30f8ab364ff89e4cffe05', measurementId: 'G-75HTLXQHZZ' };
@@ -19,11 +23,11 @@ const ORDER_LIMIT = 1000;                                   // newest orders kep
 const READS_ORDERS = ['owner', 'manager', 'sales', 'viewer'], READS_CUSTOMERS = ['owner', 'manager', 'sales'];
 const FALLBACK_CATS = [['fruits', 'Fresh Fruits'], ['vegetables', 'Fresh Vegetables'], ['meat-poultry', 'Meat & Poultry'], ['seafood', 'Seafood'], ['bakery', 'Bakery'], ['dairy-eggs', 'Dairy & Eggs'], ['grocery', 'Grocery & Pantry'], ['beverages', 'Beverages'], ['snacks', 'Snacks & Sweets'], ['frozen', 'Frozen Foods'], ['household', 'Household Essentials'], ['personal-care', 'Personal Care']].map(([id, n]) => ({ id, n }));
 
-const VIEWS = { overview, orders, customers, payments, products };
+const VIEWS = { overview, orders, customers, payments, products, categories, inventory, offers };
 SECTIONS.forEach(s => { if (!VIEWS[s.id]) VIEWS[s.id] = soonView(s.id); });
 
 const ctx = {
-  user: null, role: null, orders: [], products: [], payments: [], customerDocs: {}, categories: FALLBACK_CATS,
+  user: null, role: null, orders: [], products: [], payments: [], customerDocs: {}, categories: FALLBACK_CATS, categoryDocs: [], inventory: [], movements: [], settings: {}, inventoryError: '', categoriesError: '',
   ordersReady: false, ordersError: '', ordersTruncated: false, productsError: '', paymentsError: '',
   rangeKey: 'last30', custom: { from: '', to: '' }, range: null, route: { id: '', param: '', query: {} },
   now: () => Date.now(), can: a => can(ctx.role, a), rerender: () => rerender(), api: null
@@ -70,6 +74,49 @@ ctx.api = {
     await setDoc(doc(db, 'customers', c.id), { id: c.id, name: c.name, phone: c.phone, notes, updatedAt: serverTimestamp(), updatedBy: ctx.user.uid }, { merge: true });
     ctx.customerDocs[c.id] = { ...(ctx.customerDocs[c.id] || {}), id: c.id, name: c.name, phone: c.phone, notes }; audit('customer.notes', c.id);
   },
+  async loadCategories() {
+    try {
+      const s = await getDocs(collection(db, 'categories')); ctx.categoryDocs = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.order || 0) - (b.order || 0)); ctx.categoriesError = '';
+      if (ctx.categoryDocs.length) ctx.categories = ctx.categoryDocs.map(c => ({ id: c.id, n: c.n || c.name || c.id }));
+    } catch (e) { ctx.categoriesError = errorText(e); }
+  },
+  async saveCategory(data, id) {
+    await setDoc(doc(db, 'categories', id), { ...data, updatedAt: serverTimestamp(), updatedBy: ctx.user.uid }, { merge: true });
+    audit('category.save', id, data.n); await ctx.api.loadCategories();
+  },
+  async seedCategories() {
+    const d = await (await fetch('products.json', { cache: 'no-store' })).json(), b = writeBatch(db);
+    d.cats.forEach((c, i) => b.set(doc(db, 'categories', c.id), { n: c.n, order: i + 1, visible: true, imageUrl: c.img || '', updatedAt: serverTimestamp(), updatedBy: ctx.user.uid }));
+    await b.commit(); audit('category.seed', 'categories', `${d.cats.length} categories`); await ctx.api.loadCategories(); return d.cats.length;
+  },
+  async loadInventory() {
+    try { const s = await getDocs(collection(db, 'inventory')); ctx.inventory = s.docs.map(d => ({ id: d.id, ...d.data() })); ctx.inventoryError = ''; } catch (e) { ctx.inventoryError = errorText(e); }
+  },
+  async loadMovements(productId) {
+    const s = await getDocs(query(collection(db, 'stock_movements'), orderBy('at', 'desc'), limit(300)));
+    const all = s.docs.map(d => ({ id: d.id, ...d.data() })); ctx.movements = all; return productId ? all.filter(m => m.productId === productId) : all;
+  },
+  // Saves product stock details. Changing the quantity writes a movement in the same transaction so the history always matches.
+  async saveStock(p, meta, move) {
+    const ref = doc(db, 'inventory', p.id), mref = doc(collection(db, 'stock_movements'));
+    await runTransaction(db, async tx => {
+      const cur = (await tx.get(ref)).data() || {}, base = { productId: p.id, name: p.name || '', sku: meta.sku, lowStockAt: meta.lowStockAt, costPrice: meta.costPrice, supplier: meta.supplier, updatedAt: serverTimestamp(), updatedBy: ctx.user.uid };
+      if (move) {
+        const plan = K.planMovement(move.type, move.qty, cur.stock); if (plan.error) throw new Error(plan.error);
+        tx.set(ref, { ...base, stock: plan.after });
+        tx.set(mref, { productId: p.id, name: p.name || '', type: move.type, qty: plan.delta, before: cur.stock == null ? 0 : cur.stock, after: plan.after, note: String(move.note || '').slice(0, 200), uid: ctx.user.uid, byName: ctx.user.email || '', at: serverTimestamp() });
+      } else tx.set(ref, { ...base, ...(cur.stock != null ? { stock: cur.stock } : {}) });
+    });
+    audit(move ? 'stock.' + move.type : 'stock.details', p.id, `${p.name} ${move ? move.qty : ''}`); await ctx.api.loadInventory();
+  },
+  async setAvailable(p, available) { await updateDoc(doc(db, 'products', p.id), { available, updatedAt: serverTimestamp(), updatedBy: ctx.user.uid }); audit('product.availability', p.id, `${p.name} ${available}`); p.available = available; },
+  async setDeal(p) {
+    for (const o of ctx.products) if (o.deal && (!p || o.id !== p.id)) { await updateDoc(doc(db, 'products', o.id), { deal: false }); o.deal = false; }
+    if (p) { await updateDoc(doc(db, 'products', p.id), { deal: true, updatedAt: serverTimestamp(), updatedBy: ctx.user.uid }); p.deal = true; }
+    audit('offers.deal', p ? p.id : 'none', p ? p.name : 'cleared');
+  },
+  async loadSettings() { try { const s = await getDoc(doc(db, 'settings', 'public')); ctx.settings = s.exists() ? s.data() : {}; } catch (e) { ctx.settings = ctx.settings || {}; } },
+  async savePublicSettings(vals) { await setDoc(doc(db, 'settings', 'public'), { ...vals, updatedAt: serverTimestamp(), updatedBy: ctx.user.uid }, { merge: true }); ctx.settings = { ...ctx.settings, ...vals }; audit('settings.public', 'public', JSON.stringify(vals).slice(0, 250)); },
   async loadProducts() {
     try { const snap = await getDocs(collection(db, 'products')); ctx.products = snap.docs.map(d => ({ id: d.id, ...d.data() })); ctx.productsError = ''; } catch (e) { ctx.productsError = errorText(e); }
   },
@@ -102,7 +149,8 @@ function startData() {
     getDocs(query(collection(db, 'payments'), orderBy('createdAt', 'desc'), limit(500))).then(s => { ctx.payments = s.docs.map(d => ({ id: d.id, ...d.data() })); rerender(); }).catch(e => { ctx.paymentsError = errorText(e); rerender(); });
   }
   if (READS_CUSTOMERS.includes(r)) getDocs(collection(db, 'customers')).then(s => { ctx.customerDocs = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); rerender(); }).catch(() => { });
-  getDocs(collection(db, 'categories')).then(s => { if (s.size) ctx.categories = s.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.order || 0) - (b.order || 0)).map(c => ({ id: c.id, n: c.n || c.name || c.id })); rerender(); }).catch(() => { });
+  ctx.api.loadCategories().then(rerender); ctx.api.loadSettings().then(rerender);
+  if (['owner', 'manager', 'inventory', 'viewer'].includes(r)) ctx.api.loadInventory().then(rerender);
 }
 
 // ---------- shell ----------
@@ -159,7 +207,7 @@ async function enter(user) {
   startData(); if (!location.hash || !canSee(ctx.role, parse().id)) history.replaceState(null, '', '#/' + firstSection(ctx.role)); go();
 }
 function denied(msg) { ctx.role = null; $('#shell').hidden = true; $('#login').hidden = true; $('#denied').hidden = false; $('#dmsg').textContent = msg; }
-onAuthStateChanged(auth, u => { $('#splash').hidden = true; if (u) enter(u); else { if (unsubOrders) unsubOrders(); unsubOrders = null; Object.assign(ctx, { user: null, role: null, orders: [], payments: [], products: [], customerDocs: {}, ordersReady: false }); showLogin(); } });
+onAuthStateChanged(auth, u => { $('#splash').hidden = true; if (u) enter(u); else { if (unsubOrders) unsubOrders(); unsubOrders = null; Object.assign(ctx, { user: null, role: null, orders: [], payments: [], products: [], customerDocs: {}, categoryDocs: [], inventory: [], settings: {}, ordersReady: false }); showLogin(); } });
 $('#lf').addEventListener('submit', async e => {
   e.preventDefault(); const b = $('#lb'); b.disabled = true; say('#lst', 'Signing in…');
   try { await signInWithEmailAndPassword(auth, $('#le').value.trim(), $('#lp').value); say('#lst', ''); } catch (x) { say('#lst', errorText(x), true); } finally { b.disabled = false; }
@@ -172,7 +220,7 @@ $('#rk').addEventListener('change', e => { ctx.rangeKey = e.target.value; setRan
 $('#bell').addEventListener('click', () => { location.hash = '#/orders?s=pending'; });
 $('#burger').addEventListener('click', () => document.body.classList.toggle('nav-open'));
 $('#scrim').addEventListener('click', () => document.body.classList.remove('nav-open'));
-$('#rfs').addEventListener('click', async () => { await ctx.api.loadProducts(); toast('Products refreshed. Orders update live.'); rerender(); });
+$('#rfs').addEventListener('click', async () => { await Promise.all([ctx.api.loadProducts(), ctx.api.loadCategories(), ctx.api.loadSettings(), ctx.api.loadInventory()]); toast('Data refreshed. Orders update live.'); rerender(); });
 function closeAndResetUrl() { closeModal(); const r = parse(); if (r.param) { history.replaceState(null, '', '#/' + r.id); navKey = r.id + '/?{}'; ctx.route = { id: r.id, param: '', query: {} }; delete view().dataset.opened; } }
 document.addEventListener('click', e => {
   if (e.target.closest('[data-close-modal]') || e.target.id === 'modal') closeAndResetUrl();

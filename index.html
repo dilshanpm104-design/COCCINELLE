@@ -151,7 +151,8 @@ const byName=new Map(D.p.map(p=>[p.n.toLowerCase(),p.c])),ids=new Set(D.cats.map
 const prods=s.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.available!==false&&p.name).map(p=>{const c=p.createdAt||{};return{id:p.id,c:fix(p),n:p.name,u:p.unit||'pc',pr:+p.price||0,old:+p.oldPrice||0,img:p.imageUrl||p.imageData||'',d:p.note||p.description||'',deal:p.deal?1:0,feat:p.featured?1:0,best:p.bestSeller?1:0,t:(c.seconds||0)*1e3+(c.nanoseconds||0)/1e6}}).sort((x,y)=>x.t-y.t);
 const cats=cs?cs.docs.map(d=>({id:d.id,...d.data()})):[],set=sd&&sd.exists()?sd.data():{};return{prods,cats,set}}catch(e){return{prods:[],cats:[],set:{}}}}
 fetch('products.json?'+Date.now()).then(r=>r.json()).then(async d=>{D=d;const l=await live();if(l.prods.length)D.p=l.prods;
-l.cats.forEach(o=>{const c=D.cats.find(x=>x.id==o.id);if(c&&o.imageUrl)c.img=o.imageUrl});
+const hid=new Set();l.cats.forEach(o=>{let c=D.cats.find(x=>x.id==o.id);if(!c&&o.n&&o.visible!==false){c={id:o.id,n:o.n};D.cats.push(c)}if(!c)return;if(o.n)c.n=String(o.n);if(typeof o.imageUrl=='string'&&/^(https:\/\/|images\/)/.test(o.imageUrl))c.img=o.imageUrl;c.o=typeof o.order=='number'?o.order:999;if(o.visible===false){c.hide=1;hid.add(c.id)}});
+if(l.cats.length){D.cats=D.cats.filter(c=>!c.hide).sort((a,b)=>(a.o??999)-(b.o??999));D.p=D.p.filter(p=>!hid.has(p.c))}
 ['wa','phone','phoneLabel','hours','addr','free','map','deliveryFee','minOrder','discountPct','discountMin'].forEach(k=>{if(l.set[k]!==undefined&&l.set[k]!=='')D.cfg[k]=l.set[k]});
 $('nav').innerHTML=[['home','Home'],...D.cats.map(c=>['cat/'+c.id,c.n]),['offers','Offers'],['deals','Deals'],['about','About'],['contact','Contact']].map(([h,t])=>`<a href="#${E(h)}">${E(t)}</a>`).join('');
 $('#bar').innerHTML=`<b>${E(D.cfg.free)}</b> · Open ${E(D.cfg.hours)} · Order on WhatsApp`;

@@ -8,6 +8,10 @@ import orders from '../admin/views/orders.js';
 import customers from '../admin/views/customers.js';
 import payments from '../admin/views/payments.js';
 import products from '../admin/views/products.js';
+import categories from '../admin/views/categories.js';
+import inventory from '../admin/views/inventory.js';
+import offers from '../admin/views/offers.js';
+import * as K from '../admin/stock.js';
 import { soonView } from '../admin/views/soon.js';
 
 const qs = new URLSearchParams(location.search), role = qs.get('role') || 'owner', empty = qs.get('empty') === '1';
@@ -30,7 +34,7 @@ if (!empty) for (let d = 44; d >= 0; d--) {
 }
 const ctx = {
   role, user: { uid: 'u1', email: 'owner@example.test' }, orders: fx, products: cat.p.map(p => ({ id: p.id, name: p.n, price: p.pr, oldPrice: p.old || 0, unit: p.u, category: p.c, available: true, deal: !!p.deal, featured: !!p.feat, bestSeller: !!p.best })), payments: pays, customerDocs: {},
-  categories: cat.cats.map(c => ({ id: c.id, n: c.n })), ordersError: '', ordersTruncated: false, productsError: '', paymentsError: '', rangeKey: qs.get('range') || 'last30', custom: { from: '', to: '' }, route: { id: '', param: '', query: {} },
+  categories: cat.cats.map(c => ({ id: c.id, n: c.n })), categoryDocs: qs.get('cats') === '0' ? [] : cat.cats.map((c, i) => ({ id: c.id, n: c.n, order: i + 1, visible: true, imageUrl: c.img })), inventory: empty || qs.get('inv') === '0' ? [] : cat.p.slice(0, 12).map((p, i) => ({ id: p.id, productId: p.id, name: p.n, stock: [0, 3, 40, 12, 2, 0.5][i % 6], lowStockAt: 5, costPrice: +(p.pr * .7).toFixed(2), sku: 'SKU' + i, supplier: 'Test supplier' })), settings: {}, movements: [], inventoryError: '', categoriesError: '', ordersError: '', ordersTruncated: false, productsError: '', paymentsError: '', rangeKey: qs.get('range') || 'last30', custom: { from: '', to: '' }, route: { id: '', param: '', query: {} },
   now: () => Date.now(), can: a => can(role, a), rerender: () => render(), log: []
 };
 ctx.range = S.rangeFor(ctx.rangeKey, Date.now(), ctx.custom);
@@ -40,9 +44,14 @@ ctx.api = {
   async verifyTotals(o) { o.totalsVerified = true; ctx.log.push(['verify', o.orderId]); },
   async recordPayment(p) { const id = 'PAY-TEST-' + (ctx.payments.length + 1); ctx.log.push(['payment', p.order.orderId, p.status, p.amount, p.method, p.reference]); ctx.payments.unshift({ id, paymentId: id, orderId: p.order.orderId, customer: p.order.customer, amount: p.amount, method: p.method, reference: p.reference, status: p.status, paidAt: p.paidAt, createdAt: { seconds: Date.now() / 1000 } }); p.order.paymentStatus = p.status; p.order.paymentMethod = p.method; return id; },
   async saveCustomerNote(c, notes) { ctx.customerDocs[c.id] = { notes }; ctx.log.push(['note', c.id, notes]); },
+  async saveCategory(d, id) { ctx.log.push(['cat', id, d.n]); const i = ctx.categoryDocs.findIndex(c => c.id === id); if (i < 0) ctx.categoryDocs.push({ id, ...d }); else Object.assign(ctx.categoryDocs[i], d); },
+  async seedCategories() { return 12; }, async loadInventory() { }, async loadMovements() { return ctx.mv || []; },
+  async saveStock(p, meta, move) { const cur = ctx.inventory.find(i => i.id === p.id) || { id: p.id, productId: p.id }; if (!ctx.inventory.includes(cur)) ctx.inventory.push(cur); if (move) { const pl = K.planMovement(move.type, move.qty, cur.stock); if (pl.error) throw new Error(pl.error); cur.stock = pl.after; } Object.assign(cur, meta); ctx.log.push(['stock', p.id, move && move.type, cur.stock]); },
+  async setAvailable(p, a) { p.available = a; ctx.log.push(['avail', p.id, a]); }, async setDeal(p) { ctx.products.forEach(x => x.deal = false); if (p) p.deal = true; ctx.log.push(['deal', p && p.id]); },
+  async savePublicSettings(v) { ctx.settings = { ...ctx.settings, ...v }; ctx.log.push(['settings', JSON.stringify(v)]); },
   async loadProducts() { }, async saveProduct(d, id) { ctx.log.push(['saveProduct', id, d.name]); }, async deleteProduct(p) { ctx.log.push(['delete', p.id]); ctx.products = ctx.products.filter(x => x.id !== p.id); }, async seedProducts() { return 0; }
 };
-const VIEWS = { overview, orders, customers, payments, products }; SECTIONS.forEach(s => { if (!VIEWS[s.id]) VIEWS[s.id] = soonView(s.id); });
+const VIEWS = { overview, orders, customers, payments, products, categories, inventory, offers }; SECTIONS.forEach(s => { if (!VIEWS[s.id]) VIEWS[s.id] = soonView(s.id); });
 const parse = () => { const [path, q] = location.hash.replace(/^#\/?/, '').split('?'), [id, param] = path.split('/'); return { id: id || firstSection(role), param: decodeURIComponent(param || ''), query: Object.fromEntries(new URLSearchParams(q || '')) }; };
 function nav() { const pend = ctx.orders.filter(o => S.PENDING.includes(o.status)).length; $('#nav').innerHTML = SECTIONS.filter(s => canSee(role, s.id)).map(s => `<a class="nv${ctx.route.id === s.id ? ' on' : ''}" href="#/${s.id}">${icon(s.icon)}<span>${esc(s.label)}</span>${s.id === 'orders' && pend ? `<b class="cnt">${pend}</b>` : s.soon ? '<em class="soon">Soon</em>' : ''}</a>`).join(''); }
 let navKey = '';

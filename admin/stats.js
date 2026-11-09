@@ -28,8 +28,8 @@ export const fils = n => Math.round((Number(n) || 0) * 100);
 export const aed = f => f / 100;
 
 /** Milliseconds since epoch for an order/payment, from a Firestore Timestamp, {seconds}, number or ISO string. */
-export function tms(o) {
-  const c = o && (o.createdAt || o.paidAt);
+export function tms(o, key) {
+  const c = o && (key ? o[key] : (o.createdAt || o.paidAt));
   if (c) {
     if (typeof c.toMillis === 'function') return c.toMillis();
     if (typeof c.seconds === 'number') return c.seconds * 1000 + Math.floor((c.nanoseconds || 0) / 1e6);

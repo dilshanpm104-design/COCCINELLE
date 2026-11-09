@@ -37,10 +37,16 @@ service cloud.firestore {
       allow read: if true;
       allow create, update, delete: if hasRole(['owner', 'manager', 'inventory']);
     }
+    function num(d, k, max) { return !(k in d) || (d[k] is number && d[k] >= 0 && d[k] <= max); }
+    function validPublicSettings(d) {
+      return num(d, 'deliveryFee', 500) && num(d, 'minOrder', 20000) && num(d, 'discountPct', 50) && num(d, 'discountMin', 20000);
+    }
     // Only the 'public' settings document is visible to visitors (store name, hours, delivery text...).
     match /settings/{id} {
       allow read: if id == 'public' || isAdmin();
-      allow write: if hasRole(['owner']);
+      // The owner can change every settings document. A manager can change only the public one
+      // (delivery fee, minimum order, discount), and only with sensible values.
+      allow write: if hasRole(['owner']) || (id == 'public' && hasRole(['manager']) && validPublicSettings(request.resource.data));
     }
 
     // ---------- orders ----------
@@ -99,14 +105,22 @@ service cloud.firestore {
       allow create, update: if hasRole(['owner', 'manager']);
       allow delete: if false;
     }
+    // Private stock records (cost prices live here, never in the public products). One document per product id.
     match /inventory/{id} {
       allow read: if hasRole(['owner', 'manager', 'inventory', 'viewer']);
-      allow create, update: if hasRole(['owner', 'manager', 'inventory']);
+      allow create, update: if hasRole(['owner', 'manager', 'inventory'])
+        && request.resource.data.productId == id
+        && request.resource.data.get('stock', 0) is number && request.resource.data.get('stock', 0) >= 0
+        && request.resource.data.get('costPrice', 0) is number && request.resource.data.get('costPrice', 0) >= 0
+        && request.resource.data.get('lowStockAt', 0) is number && request.resource.data.get('lowStockAt', 0) >= 0;
       allow delete: if hasRole(['owner']);
     }
     match /stock_movements/{id} {
       allow read: if hasRole(['owner', 'manager', 'inventory', 'viewer']);
-      allow create: if hasRole(['owner', 'manager', 'inventory']);
+      allow create: if hasRole(['owner', 'manager', 'inventory'])
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.type in ['received', 'returned', 'damaged', 'expired', 'sold', 'adjustment']
+        && request.resource.data.after is number && request.resource.data.after >= 0;
       allow update, delete: if false;
     }
     match /expenses/{id} {
