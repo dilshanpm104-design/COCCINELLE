@@ -17,7 +17,9 @@ service cloud.firestore {
     }
     // Roles: owner, manager, sales, inventory, viewer. 'staff' is the legacy role from v1 and is
     // treated like a manager for products only (so existing staff keep working until migrated).
-    function hasRole(roles) { return isAdmin() && adminDoc().role in roles; }
+    // A v1 admin record that has no role is treated as 'manager' (it can run the shop but cannot
+    // manage staff or settings). Set role = 'owner' on the owner's record to unlock everything.
+    function hasRole(roles) { return isAdmin() && adminDoc().get('role', 'manager') in roles; }
 
     // ---------- staff ----------
     match /admins/{uid} {
@@ -77,7 +79,12 @@ service cloud.firestore {
       // Visitors can only CREATE a new order in the 'awaiting_confirmation' state. They can never read it back.
       allow create: if validOrder(orderId);
       allow read: if hasRole(['owner', 'manager', 'sales', 'viewer']);
-      allow update: if hasRole(['owner', 'manager', 'sales']);
+      // Owner/manager can edit any field. Sales staff may only move the order through its workflow;
+      // they cannot change prices, totals, payment fields or customer data.
+      allow update: if hasRole(['owner', 'manager'])
+        || (hasRole(['sales'])
+            && request.resource.data.diff(resource.data).affectedKeys()
+                 .hasOnly(['status', 'statusHistory', 'updatedAt', 'updatedBy']));
       allow delete: if hasRole(['owner']);
     }
 

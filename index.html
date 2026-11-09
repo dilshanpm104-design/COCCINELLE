@@ -126,7 +126,7 @@ if(+D.cfg.minOrder>0&&c.sub<FIL(+D.cfg.minOrder))return er('The minimum order is
 if(Date.now()-(+localStorage.cct||0)<15000)return er('Please wait a few seconds before sending another order.');
 busy=1;const btn=$('#sendBtn');btn.disabled=true;btn.textContent='Saving your order…';
 const w=open('about:blank','_blank');/* opened inside the tap so mobile browsers do not block it */
-const id=orderId(),o={orderId:id,status:'awaiting_confirmation',paymentStatus:'pending',fulfilment:t.toLowerCase(),customer:{name:nm,phone:ph,address:t=='Delivery'?lc:''},items:l.map(p=>({id:String(p.id),name:p.n,unit:p.u,qty:cart[p.id],unitPrice:p.pr,lineTotal:lineF(p)/100})),subtotal:c.sub/100,discount:c.disc/100,deliveryCharge:c.fee/100,total:c.total/100,currency:'AED',notes:form.nt.trim().slice(0,300),source:'website',totalsVerified:false,clientCreatedAt:new Date().toISOString()};
+const id=orderId(),o={orderId:id,status:'awaiting_confirmation',paymentStatus:'pending',fulfilment:t.toLowerCase(),customer:{name:nm,phone:ph,address:t=='Delivery'?lc:''},items:l.map(p=>({id:String(p.id),name:p.n,unit:p.u,cat:String(p.c||""),qty:cart[p.id],unitPrice:p.pr,lineTotal:lineF(p)/100})),subtotal:c.sub/100,discount:c.disc/100,deliveryCharge:c.fee/100,total:c.total/100,currency:'AED',notes:form.nt.trim().slice(0,300),source:'website',totalsVerified:false,clientCreatedAt:new Date().toISOString()};
 let saved=false;try{await Promise.race([saveOrder(o),new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),7000))]);saved=true}catch(e){queue(o)}
 const url='https://wa.me/'+D.cfg.wa+'?text='+encodeURIComponent(waText(o,c));
 if(w){try{w.location.href=url}catch(e){}}
