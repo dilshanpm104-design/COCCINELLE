@@ -1,7 +1,7 @@
 // COCCINELLE admin shell: Firebase (existing project), sign-in, role lookup, live data, router, audited writes.
 // The browser only decides what to SHOW. Firestore security rules (firestore.rules) decide what is ALLOWED.
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { initializeApp, deleteApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword, sendPasswordResetEmail } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
 import { getFirestore, collection, getDocs, getDoc, doc, setDoc, addDoc, updateDoc, deleteDoc, writeBatch, runTransaction, query, orderBy, limit, onSnapshot, serverTimestamp, arrayUnion } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import * as S from './stats.js';
 import { SECTIONS, ROLES, can, canSee, firstSection } from './perms.js';
@@ -15,7 +15,12 @@ import categories from './views/categories.js';
 import inventory from './views/inventory.js';
 import offers from './views/offers.js';
 import * as K from './stock.js';
-import { soonView } from './views/soon.js';
+import expensesV from './views/expenses.js';
+import staffV from './views/staff.js';
+import settingsV from './views/settings.js';
+import auditV from './views/audit.js';
+import analyticsV from './views/analytics.js';
+import reportsV from './views/reports.js';
 
 const firebaseConfig = { apiKey: 'AIzaSyDg7DfIV3f1pA5qV_VGgvoQV24Y2QvWiK8', authDomain: 'coccinelle-supermarket.firebaseapp.com', projectId: 'coccinelle-supermarket', storageBucket: 'coccinelle-supermarket.firebasestorage.app', messagingSenderId: '227874611552', appId: '1:227874611552:web:b30f8ab364ff89e4cffe05', measurementId: 'G-75HTLXQHZZ' };
 const app = initializeApp(firebaseConfig), auth = getAuth(app), db = getFirestore(app);
@@ -23,11 +28,10 @@ const ORDER_LIMIT = 1000;                                   // newest orders kep
 const READS_ORDERS = ['owner', 'manager', 'sales', 'viewer'], READS_CUSTOMERS = ['owner', 'manager', 'sales'];
 const FALLBACK_CATS = [['fruits', 'Fresh Fruits'], ['vegetables', 'Fresh Vegetables'], ['meat-poultry', 'Meat & Poultry'], ['seafood', 'Seafood'], ['bakery', 'Bakery'], ['dairy-eggs', 'Dairy & Eggs'], ['grocery', 'Grocery & Pantry'], ['beverages', 'Beverages'], ['snacks', 'Snacks & Sweets'], ['frozen', 'Frozen Foods'], ['household', 'Household Essentials'], ['personal-care', 'Personal Care']].map(([id, n]) => ({ id, n }));
 
-const VIEWS = { overview, orders, customers, payments, products, categories, inventory, offers };
-SECTIONS.forEach(s => { if (!VIEWS[s.id]) VIEWS[s.id] = soonView(s.id); });
+const VIEWS = { overview, orders, customers, payments, products, categories, inventory, offers, expenses: expensesV, staff: staffV, settings: settingsV, audit: auditV, analytics: analyticsV, reports: reportsV };
 
 const ctx = {
-  user: null, role: null, orders: [], products: [], payments: [], customerDocs: {}, categories: FALLBACK_CATS, categoryDocs: [], inventory: [], movements: [], settings: {}, inventoryError: '', categoriesError: '',
+  user: null, role: null, orders: [], products: [], payments: [], customerDocs: {}, categories: FALLBACK_CATS, categoryDocs: [], inventory: [], movements: [], expenses: [], audit: [], staff: [], expensesError: '', auditError: '', staffError: '', settings: {}, inventoryError: '', categoriesError: '',
   ordersReady: false, ordersError: '', ordersTruncated: false, productsError: '', paymentsError: '',
   rangeKey: 'last30', custom: { from: '', to: '' }, range: null, route: { id: '', param: '', query: {} },
   now: () => Date.now(), can: a => can(ctx.role, a), rerender: () => rerender(), api: null
@@ -117,6 +121,30 @@ ctx.api = {
   },
   async loadSettings() { try { const s = await getDoc(doc(db, 'settings', 'public')); ctx.settings = s.exists() ? s.data() : {}; } catch (e) { ctx.settings = ctx.settings || {}; } },
   async savePublicSettings(vals) { await setDoc(doc(db, 'settings', 'public'), { ...vals, updatedAt: serverTimestamp(), updatedBy: ctx.user.uid }, { merge: true }); ctx.settings = { ...ctx.settings, ...vals }; audit('settings.public', 'public', JSON.stringify(vals).slice(0, 250)); },
+  async loadExpenses() {
+    try { const s = await getDocs(query(collection(db, 'expenses'), orderBy('date', 'desc'), limit(1000))); ctx.expenses = s.docs.map(d => ({ id: d.id, ...d.data() })); ctx.expensesError = ''; } catch (e) { ctx.expensesError = errorText(e); }
+  },
+  async saveExpense(v, id) {
+    const data = { date: v.date, category: v.category, amount: Math.round(Number(v.amount) * 100) / 100, vendor: v.vendor || '', note: v.note || '', updatedAt: serverTimestamp(), updatedBy: ctx.user.uid };
+    if (id) await updateDoc(doc(db, 'expenses', id), data); else await addDoc(collection(db, 'expenses'), { ...data, createdAt: serverTimestamp(), createdBy: ctx.user.uid, createdByEmail: ctx.user.email || '' });
+    audit(id ? 'expense.update' : 'expense.add', id || data.category, `${data.category} AED ${data.amount} ${data.date}`); await ctx.api.loadExpenses();
+  },
+  async deleteExpense(e) { await deleteDoc(doc(db, 'expenses', e.id)); audit('expense.delete', e.id, `${e.category} AED ${e.amount} ${e.date}`); await ctx.api.loadExpenses(); },
+  async loadAudit() {
+    try { const s = await getDocs(query(collection(db, 'audit_logs'), orderBy('at', 'desc'), limit(300))); ctx.audit = s.docs.map(d => { const x = d.data(); return { id: d.id, ...x, at: x.at && x.at.toMillis ? x.at.toMillis() : 0 }; }); ctx.auditError = ''; } catch (e) { ctx.auditError = errorText(e); }
+  },
+  async loadStaff() {
+    try { const s = await getDocs(collection(db, 'admins')); ctx.staff = s.docs.map(d => ({ id: d.id, ...d.data() })); ctx.staffError = ''; } catch (e) { ctx.staffError = errorText(e); }
+  },
+  // Creates the sign-in account on a second, temporary app so the owner stays signed in, then saves the role.
+  async addStaff({ email, password, name, role }) {
+    const second = initializeApp(firebaseConfig, 'staff-' + Date.now()); let uid;
+    try { uid = (await createUserWithEmailAndPassword(getAuth(second), email, password)).user.uid; } finally { await deleteApp(second).catch(() => {}); }
+    await setDoc(doc(db, 'admins', uid), { email, name: name || '', role, active: true, createdAt: serverTimestamp(), createdBy: ctx.user.uid });
+    audit('staff.add', uid, `${email} as ${role}`); await ctx.api.loadStaff(); return uid;
+  },
+  async updateStaff(uid, patch) { await updateDoc(doc(db, 'admins', uid), { ...patch, updatedAt: serverTimestamp(), updatedBy: ctx.user.uid }); audit('staff.update', uid, JSON.stringify(patch)); await ctx.api.loadStaff(); },
+  async resetPassword(email) { await sendPasswordResetEmail(auth, email); audit('staff.password_reset', email, ''); },
   async loadProducts() {
     try { const snap = await getDocs(collection(db, 'products')); ctx.products = snap.docs.map(d => ({ id: d.id, ...d.data() })); ctx.productsError = ''; } catch (e) { ctx.productsError = errorText(e); }
   },
@@ -151,6 +179,7 @@ function startData() {
   if (READS_CUSTOMERS.includes(r)) getDocs(collection(db, 'customers')).then(s => { ctx.customerDocs = Object.fromEntries(s.docs.map(d => [d.id, d.data()])); rerender(); }).catch(() => { });
   ctx.api.loadCategories().then(rerender); ctx.api.loadSettings().then(rerender);
   if (['owner', 'manager', 'inventory', 'viewer'].includes(r)) ctx.api.loadInventory().then(rerender);
+  if (['owner', 'manager', 'viewer'].includes(r)) ctx.api.loadExpenses().then(rerender);
 }
 
 // ---------- shell ----------
@@ -210,7 +239,7 @@ function denied(msg) { ctx.role = null; $('#shell').hidden = true; $('#login').h
 onAuthStateChanged(auth, u => { $('#splash').hidden = true; if (u) enter(u); else { if (unsubOrders) unsubOrders(); unsubOrders = null; Object.assign(ctx, { user: null, role: null, orders: [], payments: [], products: [], customerDocs: {}, categoryDocs: [], inventory: [], settings: {}, ordersReady: false }); showLogin(); } });
 $('#lf').addEventListener('submit', async e => {
   e.preventDefault(); const b = $('#lb'); b.disabled = true; say('#lst', 'Signing in…');
-  try { await signInWithEmailAndPassword(auth, $('#le').value.trim(), $('#lp').value); say('#lst', ''); } catch (x) { say('#lst', errorText(x), true); } finally { b.disabled = false; }
+  try { const u = $('#le').value.trim(); await signInWithEmailAndPassword(auth, u.includes('@') ? u : u.toLowerCase() + '@coccinelle-admin.com', $('#lp').value); say('#lst', ''); } catch (x) { say('#lst', errorText(x), true); } finally { b.disabled = false; }
 });
 document.addEventListener('click', e => { if (e.target.closest('[data-logout]')) signOut(auth); });
 

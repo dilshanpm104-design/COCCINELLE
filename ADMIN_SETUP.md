@@ -1,75 +1,35 @@
-# Coccinelle Admin Panel setup
+# Admin dashboard setup (owner)
 
-## Files
-- `admin.html`: mobile-friendly admin UI (username/password login, add/edit/delete products, upload photos).
-- Current public website: GitHub Pages.
+The dashboard is `admin.html`. It uses your existing Firebase project `coccinelle-supermarket` on the free Spark plan. It needs no paid service and no Firebase Storage.
 
-## Important before use
-This panel is a starter, not connected until Firebase is configured. It writes product records to Firestore collection `products`. The current public site reads `deals.json`, so changes will NOT appear on the public website until the public site's product loader is migrated to Firestore. Keep using the existing website until that integration is completed.
+## One-time steps (about 10 minutes)
+1. **Check your owner account.** Firebase Console > Firestore Database > collection `admins` > the document whose ID is your user UID must contain `active` = `true` (boolean) and `role` = `owner` (string). Without `role` = `owner` you cannot manage staff or settings.
+2. **Publish the rules.** Follow `docs/FIRESTORE_SETUP.md` (copy `firestore.rules`, run the four Rules Playground checks, press Publish). Until this is done the dashboard shows "permission denied" messages and the website keeps working in its built-in mode.
+3. **Sign in** at `admin.html` with your username or email and password. A username without `@` is signed in as `username@coccinelle-admin.com`, as before.
+4. **Categories:** open Categories, press "Save the 12 default categories".
+5. **Products:** open Products. If it is empty, press the button that loads the built-in catalogue into Firebase.
+6. **Stock and costs:** open Inventory & Stock and enter quantities, alert levels and purchase costs. Profit figures need purchase costs.
+7. **Staff:** open Staff (owner only) and add each person with a role.
 
-## Firebase setup (owner)
-1. Open https://console.firebase.google.com/ and create a project (or use your existing project).
-2. Add a Web App and copy its Firebase config.
-3. Enable Authentication > Sign-in method > Email/Password.
-4. Create Firestore Database.
-5. Enable Storage.
-6. Open `admin.html` in GitHub, click Edit, and replace the placeholder values in `firebaseConfig`.
-7. The panel accepts usernames and maps them to `username@coccinelle-admin.com`. When creating accounts in Firebase Authentication, use this email format for each person, e.g. `owner@coccinelle-admin.com` and `staff1@coccinelle-admin.com`. Set a strong password for each account. Do not share the owner password.
+## What each section does
+| Section | Use |
+|---|---|
+| Overview | Today's numbers, charts, best sellers, new orders, low-stock alerts |
+| Sales & Analytics | Trends (daily to yearly), top products, categories, busy hours, customers, slow movers |
+| Orders | Every order, status workflow, print, CSV. Website orders are saved before WhatsApp opens |
+| Customers / CRM | Customers built from orders (by WhatsApp number), segments, notes |
+| Payments | Record payments, refunds. An order is Paid only after staff record the full amount |
+| Products, Categories | Catalogue, prices, photos (links or repo paths), visibility |
+| Inventory & Stock | Quantities, history, alerts, purchase cost (private) |
+| Offers & Promotions | Delivery fee, minimum order, basket discount (all 0 today), deal of the day |
+| Reports & Excel | 14 reports as Excel (.xlsx), CSV or print / PDF |
+| Expenses & Profit | Record expenses, see an honest profit estimate |
+| Staff | Create accounts, assign roles, deactivate, send password reset |
+| Store Settings | WhatsApp number (owner only), phone, hours, address, delivery message |
+| Activity Log | Who changed what and when. Cannot be edited |
 
-## Approve owner/staff accounts
-After creating each Firebase Authentication user:
-1. Copy that user's UID from Authentication > Users.
-2. In Firestore, create a document in collection `admins` with the document ID equal to that UID.
-3. Add fields: `role` = `owner` (for owner) or `staff` (for staff), and `active` = `true`.
-4. Only UIDs with an active `admins` document are authorized by the rules below.
-
-## Firestore Rules
-Paste into Firestore > Rules and publish:
-```javascript
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    function approved() {
-      return request.auth != null
-        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
-        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.active == true;
-    }
-    match /admins/{uid} {
-      // Signed-in staff can read their own authorization record only.
-      allow read: if request.auth != null && request.auth.uid == uid;
-      // Manage staff permissions manually in Firebase Console only.
-      allow write: if false;
-    }
-    match /products/{productId} {
-      allow read: if approved();
-      allow create, update, delete: if approved();
-    }
-  }
-}
-```
-
-## Storage Rules
-Paste into Storage > Rules and publish:
-```javascript
-rules_version = '2';
-service firebase.storage {
-  match /b/{bucket}/o {
-    function approved() {
-      return request.auth != null
-        && firestore.exists(/databases/(default)/documents/admins/$(request.auth.uid))
-        && firestore.get(/databases/(default)/documents/admins/$(request.auth.uid)).data.active == true;
-    }
-    match /product-images/{fileName} {
-      allow read: if approved();
-      allow write: if approved() && request.resource.size < 10 * 1024 * 1024
-        && request.resource.contentType.matches('image/.*');
-    }
-  }
-}
-```
-
-## Staff access
-Create a separate Firebase Auth account for each staff member. Give each person their own username/password. Approve their UID in `admins` with `active: true`. To remove access, set `active: false` or delete their `admins` document and disable their Auth account.
-
-## Product data migration
-The public website currently reads `deals.json`. Admin edits use Firestore `products`. Before customer use, the public site must be updated to read Firestore and display the same product fields. Until then, admin changes stay in the admin database and do not update the live offer cards.
+## Things the system does not do (by design, on the free plan)
+- It does not reduce stock automatically when a website order arrives. Staff record stock changes.
+- It does not take online payments. Payments are recorded by staff after they are received.
+- It does not calculate VAT.
+- It does not delete or hide data you did not ask it to.

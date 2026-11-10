@@ -200,3 +200,41 @@ export function toCSV(rows, cols) {
   };
   return '﻿' + [cols.map(c => cell(c.label)).join(','), ...rows.map(r => cols.map(c => cell(c.get(r))).join(','))].join('\r\n');
 }
+
+// ---------- analytics helpers ----------
+/** Revenue by category from counted orders in range. Uses the category saved on each order line, then the product catalogue. */
+export function categorySales(orders, r, productCat = {}) {
+  const m = new Map();
+  for (const o of orders) {
+    if (!inRange(o, r) || !COUNTED.includes(o.status)) continue;
+    const seen = new Set();
+    for (const i of o.items || []) {
+      const c = i.cat || productCat[String(i.id)] || 'other', e = m.get(c) || { cat: c, qty: 0, revF: 0, orders: 0 };
+      e.qty = +(e.qty + 1).toFixed(3); e.revF += fils(i.lineTotal); if (!seen.has(c)) { e.orders++; seen.add(c); } m.set(c, e);
+    }
+  }
+  return [...m.values()].map(e => ({ cat: e.cat, lines: e.qty, orders: e.orders, revenue: aed(e.revF) })).sort((a, b) => b.revenue - a.revenue);
+}
+/** Catalogue products with no counted sale in the range (slow movers). */
+export function slowMovers(products, orders, r) {
+  const sold = new Set(productSales(orders, r).map(p => String(p.id)));
+  return products.filter(p => p.available !== false && !sold.has(String(p.id)));
+}
+/** Counted orders by hour of day, Dubai time. */
+export function hourSeries(orders, r) {
+  const h = Array.from({ length: 24 }, (_, i) => ({ hour: i, orders: 0, sales: 0 }));
+  for (const o of orders) { if (!inRange(o, r) || !COUNTED.includes(o.status)) continue; const b = h[new Date(tms(o) + TZ_OFFSET_MS).getUTCHours()]; b.orders++; b.sales += fils(o.total); }
+  return h.map(x => ({ ...x, sales: aed(x.sales) }));
+}
+/** Delivery versus pickup, counted orders. */
+export function fulfilmentSplit(orders, r) {
+  const o = { delivery: { orders: 0, f: 0 }, pickup: { orders: 0, f: 0 } };
+  for (const x of orders) { if (!inRange(x, r) || !COUNTED.includes(x.status)) continue; const k = x.fulfilment === 'pickup' ? 'pickup' : 'delivery'; o[k].orders++; o[k].f += fils(x.total); }
+  return { delivery: { orders: o.delivery.orders, sales: aed(o.delivery.f) }, pickup: { orders: o.pickup.orders, sales: aed(o.pickup.f) } };
+}
+/** New customers (first order in range) versus returning (ordered before, and again in range). */
+export function customerMix(customers, orders, r) {
+  const ids = new Set(orders.filter(o => inRange(o, r) && o.status !== 'cancelled').map(o => customerId((o.customer || {}).phone || '')));
+  let nw = 0, ret = 0; for (const c of customers) { if (!ids.has(c.id)) continue; if (c.first >= r.start && c.first < r.end) nw++; else ret++; }
+  return { new: nw, returning: ret };
+}

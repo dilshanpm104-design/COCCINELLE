@@ -38,15 +38,18 @@ service cloud.firestore {
       allow create, update, delete: if hasRole(['owner', 'manager', 'inventory']);
     }
     function num(d, k, max) { return !(k in d) || (d[k] is number && d[k] >= 0 && d[k] <= max); }
+    function str(d, k, max) { return !(k in d) || (d[k] is string && d[k].size() <= max); }
     function validPublicSettings(d) {
-      return num(d, 'deliveryFee', 500) && num(d, 'minOrder', 20000) && num(d, 'discountPct', 50) && num(d, 'discountMin', 20000);
+      return str(d, 'hours', 40) && str(d, 'addr', 120) && str(d, 'free', 80)
+        && num(d, 'deliveryFee', 500) && num(d, 'minOrder', 20000) && num(d, 'discountPct', 50) && num(d, 'discountMin', 20000);
     }
     // Only the 'public' settings document is visible to visitors (store name, hours, delivery text...).
     match /settings/{id} {
       allow read: if id == 'public' || isAdmin();
       // The owner can change every settings document. A manager can change only the public one
       // (delivery fee, minimum order, discount), and only with sensible values.
-      allow write: if hasRole(['owner']) || (id == 'public' && hasRole(['manager']) && validPublicSettings(request.resource.data));
+      allow write: if hasRole(['owner']) || (id == 'public' && hasRole(['manager']) && validPublicSettings(request.resource.data)
+        && !request.resource.data.diff(resource == null ? {} : resource.data).affectedKeys().hasAny(['wa', 'phone', 'phoneLabel', 'map']));
     }
 
     // ---------- orders ----------
@@ -125,7 +128,9 @@ service cloud.firestore {
     }
     match /expenses/{id} {
       allow read: if hasRole(['owner', 'manager', 'viewer']);
-      allow create, update: if hasRole(['owner', 'manager']);
+      allow create, update: if hasRole(['owner', 'manager'])
+        && request.resource.data.amount is number && request.resource.data.amount > 0 && request.resource.data.amount <= 10000000
+        && request.resource.data.category is string && request.resource.data.date is string && request.resource.data.date.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
       allow delete: if hasRole(['owner']);
     }
     match /daily_reports/{id} {

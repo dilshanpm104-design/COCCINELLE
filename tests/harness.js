@@ -12,7 +12,12 @@ import categories from '../admin/views/categories.js';
 import inventory from '../admin/views/inventory.js';
 import offers from '../admin/views/offers.js';
 import * as K from '../admin/stock.js';
-import { soonView } from '../admin/views/soon.js';
+import expensesV from '../admin/views/expenses.js';
+import staffV from '../admin/views/staff.js';
+import settingsV from '../admin/views/settings.js';
+import auditV from '../admin/views/audit.js';
+import analyticsV from '../admin/views/analytics.js';
+import reportsV from '../admin/views/reports.js';
 
 const qs = new URLSearchParams(location.search), role = qs.get('role') || 'owner', empty = qs.get('empty') === '1';
 const cat = await (await fetch('../products.json')).json();
@@ -34,7 +39,7 @@ if (!empty) for (let d = 44; d >= 0; d--) {
 }
 const ctx = {
   role, user: { uid: 'u1', email: 'owner@example.test' }, orders: fx, products: cat.p.map(p => ({ id: p.id, name: p.n, price: p.pr, oldPrice: p.old || 0, unit: p.u, category: p.c, available: true, deal: !!p.deal, featured: !!p.feat, bestSeller: !!p.best })), payments: pays, customerDocs: {},
-  categories: cat.cats.map(c => ({ id: c.id, n: c.n })), categoryDocs: qs.get('cats') === '0' ? [] : cat.cats.map((c, i) => ({ id: c.id, n: c.n, order: i + 1, visible: true, imageUrl: c.img })), inventory: empty || qs.get('inv') === '0' ? [] : cat.p.slice(0, 12).map((p, i) => ({ id: p.id, productId: p.id, name: p.n, stock: [0, 3, 40, 12, 2, 0.5][i % 6], lowStockAt: 5, costPrice: +(p.pr * .7).toFixed(2), sku: 'SKU' + i, supplier: 'Test supplier' })), settings: {}, movements: [], inventoryError: '', categoriesError: '', ordersError: '', ordersTruncated: false, productsError: '', paymentsError: '', rangeKey: qs.get('range') || 'last30', custom: { from: '', to: '' }, route: { id: '', param: '', query: {} },
+  categories: cat.cats.map(c => ({ id: c.id, n: c.n })), categoryDocs: qs.get('cats') === '0' ? [] : cat.cats.map((c, i) => ({ id: c.id, n: c.n, order: i + 1, visible: true, imageUrl: c.img })), inventory: empty || qs.get('inv') === '0' ? [] : cat.p.slice(0, 12).map((p, i) => ({ id: p.id, productId: p.id, name: p.n, stock: [0, 3, 40, 12, 2, 0.5][i % 6], lowStockAt: 5, costPrice: +(p.pr * .7).toFixed(2), sku: 'SKU' + i, supplier: 'Test supplier' })), settings: {}, movements: [], expenses: empty ? [] : [['Rent', 9000, 5], ['Electricity & water', 1450.5, 12], ['Salaries', 15000, 3], ['Packaging', 320, 1], ['Delivery', 210.25, 20]].map(([c, a, d], i) => ({ id: 'E' + i, date: S.dayKey(NOW - d * DAY), category: c, amount: a, vendor: 'Vendor ' + i, note: 'Test expense' })), audit: empty ? [] : [['status.confirmed', 'CC-1', 'status'], ['payment.paid', 'CC-2', 'AED 40'], ['export.orders', 'orders', '12 rows']].map(([a, t, d], i) => ({ id: 'A' + i, uid: 'u1', email: 'owner@example.test', role: 'owner', action: a, target: t, detail: d, at: NOW - i * 3600e3 })), staff: [{ id: 'u1', email: 'owner@example.test', role: 'owner', active: true }, { id: 'u2', email: 'sales@example.test', name: 'Sam Sales', role: 'sales', active: true }, { id: 'u3', email: 'old@example.test', role: 'viewer', active: false }], inventoryError: '', categoriesError: '', ordersError: '', ordersTruncated: false, productsError: '', paymentsError: '', rangeKey: qs.get('range') || 'last30', custom: { from: '', to: '' }, route: { id: '', param: '', query: {} },
   now: () => Date.now(), can: a => can(role, a), rerender: () => render(), log: []
 };
 ctx.range = S.rangeFor(ctx.rangeKey, Date.now(), ctx.custom);
@@ -49,9 +54,14 @@ ctx.api = {
   async saveStock(p, meta, move) { const cur = ctx.inventory.find(i => i.id === p.id) || { id: p.id, productId: p.id }; if (!ctx.inventory.includes(cur)) ctx.inventory.push(cur); if (move) { const pl = K.planMovement(move.type, move.qty, cur.stock); if (pl.error) throw new Error(pl.error); cur.stock = pl.after; } Object.assign(cur, meta); ctx.log.push(['stock', p.id, move && move.type, cur.stock]); },
   async setAvailable(p, a) { p.available = a; ctx.log.push(['avail', p.id, a]); }, async setDeal(p) { ctx.products.forEach(x => x.deal = false); if (p) p.deal = true; ctx.log.push(['deal', p && p.id]); },
   async savePublicSettings(v) { ctx.settings = { ...ctx.settings, ...v }; ctx.log.push(['settings', JSON.stringify(v)]); },
+  async loadExpenses() { }, async loadAudit() { }, async loadStaff() { },
+  async saveExpense(v, id) { ctx.log.push(['expense', id || 'new', v.category, v.amount]); if (id) Object.assign(ctx.expenses.find(e => e.id === id), v, { amount: +v.amount }); else ctx.expenses.unshift({ id: 'EN' + ctx.expenses.length, ...v, amount: +v.amount }); },
+  async deleteExpense(e) { ctx.log.push(['expense-del', e.id]); ctx.expenses = ctx.expenses.filter(x => x.id !== e.id); },
+  async addStaff(v) { ctx.log.push(['staff-add', v.email, v.role]); ctx.staff.push({ id: 'u' + (ctx.staff.length + 1), email: v.email, name: v.name, role: v.role, active: true }); },
+  async updateStaff(id, patch) { ctx.log.push(['staff-update', id, JSON.stringify(patch)]); Object.assign(ctx.staff.find(x => x.id === id), patch); }, async resetPassword(e) { ctx.log.push(['reset', e]); },
   async loadProducts() { }, async saveProduct(d, id) { ctx.log.push(['saveProduct', id, d.name]); }, async deleteProduct(p) { ctx.log.push(['delete', p.id]); ctx.products = ctx.products.filter(x => x.id !== p.id); }, async seedProducts() { return 0; }
 };
-const VIEWS = { overview, orders, customers, payments, products, categories, inventory, offers }; SECTIONS.forEach(s => { if (!VIEWS[s.id]) VIEWS[s.id] = soonView(s.id); });
+const VIEWS = { overview, orders, customers, payments, products, categories, inventory, offers, expenses: expensesV, staff: staffV, settings: settingsV, audit: auditV, analytics: analyticsV, reports: reportsV };
 const parse = () => { const [path, q] = location.hash.replace(/^#\/?/, '').split('?'), [id, param] = path.split('/'); return { id: id || firstSection(role), param: decodeURIComponent(param || ''), query: Object.fromEntries(new URLSearchParams(q || '')) }; };
 function nav() { const pend = ctx.orders.filter(o => S.PENDING.includes(o.status)).length; $('#nav').innerHTML = SECTIONS.filter(s => canSee(role, s.id)).map(s => `<a class="nv${ctx.route.id === s.id ? ' on' : ''}" href="#/${s.id}">${icon(s.icon)}<span>${esc(s.label)}</span>${s.id === 'orders' && pend ? `<b class="cnt">${pend}</b>` : s.soon ? '<em class="soon">Soon</em>' : ''}</a>`).join(''); }
 let navKey = '';

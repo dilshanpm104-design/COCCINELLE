@@ -5,7 +5,7 @@ export const ROLES = { owner: 'Owner / Super Admin', manager: 'Manager', sales: 
 // Sections in sidebar order. `roles` = who can open the section.
 export const SECTIONS = [
   { id: 'overview', label: 'Overview', icon: 'grid', roles: ['owner', 'manager', 'viewer'] },
-  { id: 'analytics', label: 'Sales & Analytics', icon: 'chart', roles: ['owner', 'manager', 'viewer'], soon: 'M6' },
+  { id: 'analytics', label: 'Sales & Analytics', icon: 'chart', roles: ['owner', 'manager', 'viewer'] },
   { id: 'orders', label: 'Orders', icon: 'bag', roles: ['owner', 'manager', 'sales', 'viewer'] },
   { id: 'customers', label: 'Customers / CRM', icon: 'users', roles: ['owner', 'manager', 'sales'] },
   { id: 'payments', label: 'Payments', icon: 'card', roles: ['owner', 'manager', 'sales', 'viewer'] },
@@ -13,11 +13,11 @@ export const SECTIONS = [
   { id: 'categories', label: 'Categories', icon: 'tag', roles: ['owner', 'manager', 'inventory'] },
   { id: 'inventory', label: 'Inventory & Stock', icon: 'stack', roles: ['owner', 'manager', 'inventory', 'viewer'] },
   { id: 'offers', label: 'Offers & Promotions', icon: 'spark', roles: ['owner', 'manager'] },
-  { id: 'reports', label: 'Reports & Excel', icon: 'file', roles: ['owner', 'manager', 'viewer'], soon: 'M6' },
-  { id: 'expenses', label: 'Expenses & Profit', icon: 'coin', roles: ['owner', 'manager', 'viewer'], soon: 'M5' },
-  { id: 'staff', label: 'Staff', icon: 'shield', roles: ['owner'], soon: 'M5' },
-  { id: 'settings', label: 'Store Settings', icon: 'cog', roles: ['owner', 'manager'], soon: 'M5' },
-  { id: 'audit', label: 'Activity Log', icon: 'clock', roles: ['owner', 'manager'], soon: 'M5' }
+  { id: 'reports', label: 'Reports & Excel', icon: 'file', roles: ['owner', 'manager', 'viewer'] },
+  { id: 'expenses', label: 'Expenses & Profit', icon: 'coin', roles: ['owner', 'manager', 'viewer'] },
+  { id: 'staff', label: 'Staff', icon: 'shield', roles: ['owner'] },
+  { id: 'settings', label: 'Store Settings', icon: 'cog', roles: ['owner', 'manager'] },
+  { id: 'audit', label: 'Activity Log', icon: 'clock', roles: ['owner', 'manager'] }
 ];
 
 // Single actions (buttons) and who may use them.
@@ -30,6 +30,12 @@ export const ACTIONS = {
   'categories.edit': ['owner', 'manager', 'inventory'],
   'inventory.edit': ['owner', 'manager', 'inventory'],
   'offers.edit': ['owner', 'manager'],
+  'expenses.edit': ['owner', 'manager'],
+  'expenses.delete': ['owner'],
+  'staff.manage': ['owner'],
+  'settings.edit': ['owner', 'manager'],
+  'settings.contact': ['owner'],
+  'export.reports': ['owner', 'manager', 'viewer'],
   'export.inventory': ['owner', 'manager', 'inventory', 'viewer'],
   'export.orders': ['owner', 'manager', 'viewer'],
   'export.customers': ['owner', 'manager'],

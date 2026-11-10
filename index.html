@@ -153,7 +153,7 @@ const cats=cs?cs.docs.map(d=>({id:d.id,...d.data()})):[],set=sd&&sd.exists()?sd.
 fetch('products.json?'+Date.now()).then(r=>r.json()).then(async d=>{D=d;const l=await live();if(l.prods.length)D.p=l.prods;
 const hid=new Set();l.cats.forEach(o=>{let c=D.cats.find(x=>x.id==o.id);if(!c&&o.n&&o.visible!==false){c={id:o.id,n:o.n};D.cats.push(c)}if(!c)return;if(o.n)c.n=String(o.n);if(typeof o.imageUrl=='string'&&/^(https:\/\/|images\/)/.test(o.imageUrl))c.img=o.imageUrl;c.o=typeof o.order=='number'?o.order:999;if(o.visible===false){c.hide=1;hid.add(c.id)}});
 if(l.cats.length){D.cats=D.cats.filter(c=>!c.hide).sort((a,b)=>(a.o??999)-(b.o??999));D.p=D.p.filter(p=>!hid.has(p.c))}
-['wa','phone','phoneLabel','hours','addr','free','map','deliveryFee','minOrder','discountPct','discountMin'].forEach(k=>{if(l.set[k]!==undefined&&l.set[k]!=='')D.cfg[k]=l.set[k]});
+['wa','phone','phoneLabel','hours','addr','free','map','deliveryFee','minOrder','discountPct','discountMin'].forEach(k=>{if(l.set[k]!==undefined&&l.set[k]!=='')D.cfg[k]=l.set[k]});if(!/^\d{8,15}$/.test(String(D.cfg.wa)))D.cfg.wa='971585060627';if(!/^https:\/\//.test(String(D.cfg.map)))D.cfg.map='https://maps.app.goo.gl/AxJbmynV3RGL8YZ57';
 $('nav').innerHTML=[['home','Home'],...D.cats.map(c=>['cat/'+c.id,c.n]),['offers','Offers'],['deals','Deals'],['about','About'],['contact','Contact']].map(([h,t])=>`<a href="#${E(h)}">${E(t)}</a>`).join('');
 $('#bar').innerHTML=`<b>${E(D.cfg.free)}</b> · Open ${E(D.cfg.hours)} · Order on WhatsApp`;
 $('#f1').innerHTML=`<h5>Visit us</h5><p>${E(D.cfg.addr)}</p><p>Open ${E(D.cfg.hours)}</p><p><a href="tel:${E(D.cfg.phone)}">${E(D.cfg.phoneLabel)}</a></p><p><a href="${E(D.cfg.map)}" target="_blank" rel="noopener">Open in Maps</a></p>`;
